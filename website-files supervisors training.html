@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Supervisor Leadership Training</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#1E3A5F;--navy2:#2D5986;--indigo:#4F46E5;--violet:#7C3AED;
+  --cyan:#0891B2;--green:#059669;--amber:#D97706;--red:#DC2626;
+  --gray50:#F8FAFC;--gray100:#F1F5F9;--gray200:#E5E7EB;
+  --gray400:#9CA3AF;--gray500:#6B7280;--gray700:#374151;
+  --radius:12px;--shadow:0 1px 6px rgba(0,0,0,.08);
+}
+html{font-size:16px}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--gray50);color:var(--gray700);min-height:100vh}
+button{font-family:inherit;cursor:pointer}
+input{font-family:inherit}
+
+/* AUTH */
+#auth-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px;background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%)}
+.auth-box{background:#fff;border-radius:16px;padding:36px 32px;width:100%;max-width:420px;box-shadow:0 8px 32px rgba(0,0,0,.2)}
+.auth-logo{text-align:center;margin-bottom:24px}
+.auth-logo h1{color:var(--navy);font-size:20px;font-weight:800;margin-top:8px}
+.auth-logo p{color:var(--gray500);font-size:13px;margin-top:4px}
+.auth-tabs{display:flex;border:1px solid var(--gray200);border-radius:8px;overflow:hidden;margin-bottom:24px}
+.auth-tab{flex:1;padding:10px;border:none;background:#fff;font-size:14px;font-weight:600;color:var(--gray500);transition:all .15s}
+.auth-tab.active{background:var(--navy);color:#fff}
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:13px;font-weight:600;color:var(--gray700);margin-bottom:6px}
+.form-group input{width:100%;padding:11px 14px;border:1.5px solid var(--gray200);border-radius:8px;font-size:15px;outline:none;transition:border .15s}
+.form-group input:focus{border-color:var(--navy)}
+.btn-auth{width:100%;padding:12px;background:var(--navy);color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:700;margin-top:4px;transition:background .15s}
+.btn-auth:hover{background:var(--navy2)}
+.btn-auth:disabled{opacity:.6;cursor:not-allowed}
+.auth-error{background:#FEE2E2;color:var(--red);font-size:13px;padding:10px 12px;border-radius:8px;margin-bottom:14px;display:none}
+.auth-success{background:#DCFCE7;color:var(--green);font-size:13px;padding:10px 12px;border-radius:8px;margin-bottom:14px;display:none}
+
+/* APP */
+#app{display:none}
+#header{background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);color:#fff;padding:16px 24px 0}
+.header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:10px}
+.header-brand h1{font-size:clamp(15px,3vw,20px);font-weight:800}
+.header-brand p{font-size:12px;opacity:.75;margin-top:2px}
+.header-user{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.user-chip{background:rgba(255,255,255,.15);border-radius:20px;padding:6px 14px;font-size:13px;font-weight:600}
+.btn-logout{background:rgba(255,255,255,.2);border:none;color:#fff;border-radius:8px;padding:7px 14px;font-size:13px;font-weight:600;transition:background .15s}
+.btn-logout:hover{background:rgba(255,255,255,.35)}
+#nav{display:flex;gap:2px;flex-wrap:wrap;margin-top:4px}
+.nav-btn{padding:9px 14px;border:none;border-radius:8px 8px 0 0;font-size:13px;font-weight:600;background:transparent;color:rgba(255,255,255,.8);transition:all .15s;white-space:nowrap}
+.nav-btn.active{background:var(--gray50);color:var(--navy)}
+.nav-btn:hover:not(.active){background:rgba(255,255,255,.15)}
+.progress-strip{background:rgba(255,255,255,.1);padding:10px 24px;display:flex;gap:20px;flex-wrap:wrap;align-items:center}
+.prog-item{font-size:12px;color:rgba(255,255,255,.85);display:flex;align-items:center;gap:6px}
+.prog-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.35)}
+.prog-dot.done{background:#4ADE80}
+
+/* MAIN */
+#main{max-width:880px;margin:0 auto;padding:28px 16px}
+.section{display:none}
+.section.active{display:block}
+h2.sec-title{color:var(--navy);font-size:18px;margin-bottom:4px}
+.sec-sub{color:var(--gray500);font-size:13px;margin-bottom:18px}
+
+/* CARDS */
+.card{background:#fff;border-radius:var(--radius);padding:22px;margin-bottom:14px;box-shadow:var(--shadow)}
+.card-collapsible{background:#fff;border-radius:var(--radius);margin-bottom:10px;overflow:hidden;box-shadow:var(--shadow)}
+.card-header{width:100%;background:none;border:none;padding:18px 20px;display:flex;align-items:center;justify-content:space-between;text-align:left;gap:12px}
+.card-header:hover{background:var(--gray50)}
+.card-body{padding:0 20px 20px;border-top:3px solid var(--gray100);display:none}
+.card-body.open{display:block}
+.arrow{color:var(--gray400);font-size:13px;flex-shrink:0;transition:transform .2s}
+.arrow.open{transform:rotate(180deg)}
+
+/* LAYOUT */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:560px){.g2{grid-template-columns:1fr}}
+
+/* HOME */
+.home-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:16px}
+.home-card{background:#fff;border:2px solid var(--gray200);border-radius:var(--radius);padding:18px;cursor:pointer;text-align:left;transition:all .2s;box-shadow:var(--shadow)}
+.home-card:hover{transform:translateY(-3px);box-shadow:0 6px 18px rgba(0,0,0,.1)}
+
+/* COMPARE */
+.compare-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.cmp{flex:1;border-radius:8px;padding:12px;min-width:130px}
+.cmp-label{font-size:11px;font-weight:700;margin-bottom:5px}
+.cmp-text{font-size:14px;line-height:1.5}
+
+/* STEPS */
+.step-row{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start}
+.step-num{width:34px;height:34px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0}
+
+/* SCENARIOS */
+.opt-btn{width:100%;border:1.5px solid var(--gray200);border-radius:8px;padding:12px 16px;text-align:left;font-size:14px;background:#fff;display:flex;align-items:flex-start;gap:12px;margin-bottom:8px;transition:all .15s;line-height:1.5}
+.opt-btn:hover:not(:disabled){background:var(--gray50);border-color:#94A3B8}
+.opt-btn.correct{background:#DCFCE7;border:2px solid var(--green);color:#065F46}
+.opt-btn.wrong{background:#FEE2E2;border:2px solid var(--red);color:#7F1D1D}
+.opt-btn.show-correct{background:#F0FDF4;border-color:#86EFAC}
+.opt-icon{width:24px;height:24px;border-radius:50%;border:2px solid currentColor;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:1px}
+.feedback-box{border-radius:0 0 8px 8px;padding:12px 16px;font-size:14px;margin-top:-6px;margin-bottom:8px;line-height:1.6}
+
+/* QUIZ */
+.q-bar{background:var(--gray100);height:7px;border-radius:4px;margin-bottom:22px;overflow:hidden}
+.q-fill{background:var(--indigo);height:7px;border-radius:4px;transition:width .4s}
+.q-opt{width:100%;border:1.5px solid var(--gray200);border-radius:8px;padding:13px 16px;text-align:left;font-size:15px;background:#fff;display:flex;gap:10px;align-items:flex-start;margin-bottom:8px;transition:all .15s;line-height:1.5}
+.q-opt:hover:not(:disabled){background:var(--gray50)}
+.q-opt.qcorrect{background:#DCFCE7;border:2px solid var(--green);color:#065F46}
+.q-opt.qwrong{background:#FEE2E2;border:2px solid var(--red);color:#7F1D1D}
+.q-opt.qshow{background:#F0FDF4;border-color:#86EFAC}
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:22px}
+.result-cell{border-radius:10px;padding:18px;text-align:center}
+
+/* BUTTONS */
+.btn-primary{background:var(--navy);color:#fff;border:none;border-radius:8px;padding:11px 22px;font-weight:700;font-size:14px;transition:background .15s}
+.btn-primary:hover{background:var(--navy2)}
+.btn-outline{background:none;border:2px solid var(--navy);color:var(--navy);border-radius:8px;padding:11px 22px;font-weight:700;font-size:14px;transition:all .15s}
+.btn-outline:hover{background:var(--navy);color:#fff}
+.btn-sm{background:none;border:1px solid var(--gray200);border-radius:6px;padding:6px 14px;font-size:13px;color:var(--gray500);transition:all .15s}
+.btn-sm:hover{background:var(--gray100)}
+
+/* MISC */
+.badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700}
+.pb-row{border-radius:7px;padding:10px 14px;margin-bottom:7px;font-size:15px;display:flex;gap:12px;align-items:center;line-height:1.5}
+.quote-box{background:var(--navy);color:#fff;border-radius:var(--radius);padding:22px;text-align:center;margin-top:18px}
+.quote-box p{font-style:italic;font-size:16px;opacity:.9;line-height:1.7}
+
+/* TOAST */
+#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(60px);background:#1E3A5F;color:#fff;padding:12px 22px;border-radius:24px;font-size:14px;font-weight:600;opacity:0;transition:all .35s;pointer-events:none;z-index:9999;white-space:nowrap}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* LOADING */
+#loading-screen{position:fixed;inset:0;background:var(--navy);display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:14px;color:#fff}
+.spinner{width:40px;height:40px;border:4px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+@media print{
+  #header,#auth-screen,#loading-screen,.btn-sm,.btn-primary,.btn-outline,.btn-logout,.progress-strip{display:none!important}
+  .section{display:block!important}
+  .card-body{display:block!important}
+  body{background:#fff}
+  .card,.card-collapsible{box-shadow:none;border:1px solid #ddd}
+}
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="loading-screen">
+  <div class="spinner"></div>
+  <div style="font-size:14px;opacity:.8">Loading…</div>
+</div>
+
+<!-- AUTH -->
+<div id="auth-screen" style="display:none">
+  <div class="auth-box">
+    <div class="auth-logo">
+      <div style="font-size:38px">🧑‍💼</div>
+      <h1>Supervisor Leadership Training</h1>
+      <p>Conflict Management Practice Tool</p>
+    </div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchTab('login',this)">Sign In</button>
+      <button class="auth-tab" onclick="switchTab('register',this)">Register</button>
+    </div>
+    <div id="auth-error" class="auth-error"></div>
+    <div id="auth-success" class="auth-success"></div>
+
+    <!-- LOGIN -->
+    <div id="login-form">
+      <div class="form-group"><label>Email</label><input id="l-email" type="email" placeholder="you@example.com" autocomplete="email"/></div>
+      <div class="form-group"><label>Password</label><input id="l-pass" type="password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"/></div>
+      <button class="btn-auth" id="btn-login" onclick="doLogin()">Sign In</button>
+    </div>
+
+    <!-- REGISTER -->
+    <div id="register-form" style="display:none">
+      <div class="form-group"><label>Full Name</label><input id="r-name" type="text" placeholder="Jane Smith" autocomplete="name"/></div>
+      <div class="form-group"><label>Email</label><input id="r-email" type="email" placeholder="you@example.com" autocomplete="email"/></div>
+      <div class="form-group"><label>Password (min 6 chars)</label><input id="r-pass" type="password" placeholder="••••••••" autocomplete="new-password" onkeydown="if(event.key==='Enter')doRegister()"/></div>
+      <button class="btn-auth" id="btn-register" onclick="doRegister()">Create Account</button>
+    </div>
+    <p style="text-align:center;font-size:12px;color:var(--gray400);margin-top:18px">Powered by Supabase · Progress saved automatically</p>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none">
+  <div id="header">
+    <div class="header-top">
+      <div class="header-brand">
+        <h1>Supervisor Leadership Training</h1>
+        <p>Conflict Management Practice Tool</p>
+      </div>
+      <div class="header-user">
+        <span class="user-chip" id="user-name-chip"></span>
+        <button class="btn-logout" onclick="doLogout()">Sign Out</button>
+      </div>
+    </div>
+    <div class="progress-strip" id="progress-strip"></div>
+    <div id="nav">
+      <button class="nav-btn active" onclick="showSection('home',this)">🏠 Home</button>
+      <button class="nav-btn" onclick="showSection('skills',this)">🔑 Skills</button>
+      <button class="nav-btn" onclick="showSection('scenarios',this)">🎭 Scenarios</button>
+      <button class="nav-btn" onclick="showSection('styles',this)">🗂️ Styles</button>
+      <button class="nav-btn" onclick="showSection('playbook',this)">📋 Playbook</button>
+      <button class="nav-btn" onclick="showSection('quiz',this)">🧠 Quiz</button>
+    </div>
+  </div>
+
+  <div id="main">
+
+    <!-- HOME -->
+    <div id="sec-home" class="section active">
+      <div class="card" style="border-left:4px solid var(--navy)">
+        <h2 style="color:var(--navy);font-size:18px;margin-bottom:10px">Why Conflict Management Matters</h2>
+        <p style="line-height:1.7;font-size:15px;margin-bottom:14px">Most conflicts don't start as conflicts. They start as <strong>misunderstandings, pressure, or unmet expectations</strong>. Left unmanaged, they lead to QC drops, rework, low morale, and client concerns.</p>
+        <div style="background:#EEF2FF;border-radius:8px;padding:16px">
+          <div style="font-weight:700;color:var(--indigo);margin-bottom:10px;font-size:15px">Supervisors who manage conflict well:</div>
+          <div style="font-size:15px;line-height:2.4">
+            <span style="color:var(--indigo)">✓</span>&nbsp;Prevent small issues from escalating<br>
+            <span style="color:var(--indigo)">✓</span>&nbsp;Protect work quality and standards<br>
+            <span style="color:var(--indigo)">✓</span>&nbsp;Keep high performers engaged and respected<br>
+            <span style="color:var(--indigo)">✓</span>&nbsp;Maintain client and team confidence
+          </div>
+        </div>
+      </div>
+      <div class="home-grid">
+        <div class="home-card" onclick="showSectionByName('skills')" style="border-color:#4F46E530"><div style="font-size:26px;margin-bottom:8px">🔑</div><div style="font-weight:700;color:var(--indigo);font-size:14px">Skills</div><div style="font-size:12px;color:var(--gray500);margin-top:3px">7 core skills with examples</div></div>
+        <div class="home-card" onclick="showSectionByName('scenarios')" style="border-color:#05996930"><div style="font-size:26px;margin-bottom:8px">🎭</div><div style="font-weight:700;color:var(--green);font-size:14px">Scenarios</div><div style="font-size:12px;color:var(--gray500);margin-top:3px">5 real workplace situations</div></div>
+        <div class="home-card" onclick="showSectionByName('styles')" style="border-color:#D9770630"><div style="font-size:26px;margin-bottom:8px">🗂️</div><div style="font-weight:700;color:var(--amber);font-size:14px">Styles</div><div style="font-size:12px;color:var(--gray500);margin-top:3px">5 conflict management styles</div></div>
+        <div class="home-card" onclick="showSectionByName('playbook')" style="border-color:#0891B230"><div style="font-size:26px;margin-bottom:8px">📋</div><div style="font-weight:700;color:var(--cyan);font-size:14px">Playbook</div><div style="font-size:12px;color:var(--gray500);margin-top:3px">Quick reference guide</div></div>
+        <div class="home-card" onclick="showSectionByName('quiz')" style="border-color:#7C3AED30"><div style="font-size:26px;margin-bottom:8px">🧠</div><div style="font-weight:700;color:var(--violet);font-size:14px">Quiz</div><div style="font-size:12px;color:var(--gray500);margin-top:3px">8-question self-assessment</div></div>
+      </div>
+      <div class="quote-box"><p>"Technical skill got you here.<br>Conflict management will determine how far you go as a leader."</p></div>
+    </div>
+
+    <!-- SKILLS -->
+    <div id="sec-skills" class="section">
+      <h2 class="sec-title">🔑 Core Conflict Management Skills</h2>
+      <p class="sec-sub">Tap each skill to expand. Your progress is saved automatically.</p>
+      <div id="skills-container"></div>
+    </div>
+
+    <!-- SCENARIOS -->
+    <div id="sec-scenarios" class="section">
+      <h2 class="sec-title">🎭 Practice Scenarios</h2>
+      <p class="sec-sub">Select the best response for each situation.</p>
+      <div id="scenarios-container"></div>
+    </div>
+
+    <!-- STYLES -->
+    <div id="sec-styles" class="section">
+      <h2 class="sec-title">🗂️ The Five Conflict Management Styles</h2>
+      <p class="sec-sub">Effective leaders know when to use each style depending on the situation.</p>
+      <div id="styles-container"></div>
+      <div style="background:var(--navy);color:#fff;border-radius:var(--radius);padding:18px;margin-top:10px">
+        <div style="font-weight:700;margin-bottom:7px;font-size:15px">Key Leadership Principle</div>
+        <div style="font-size:14px;opacity:.9;line-height:1.7">Conflict resolution is not about winning arguments. It's about protecting team performance, maintaining respect, and ensuring work standards are met.</div>
+      </div>
+    </div>
+
+    <!-- PLAYBOOK -->
+    <div id="sec-playbook" class="section">
+      <h2 class="sec-title">📋 Supervisor Conflict Playbook</h2>
+      <p class="sec-sub">Your quick reference guide for every conflict situation.</p>
+      <div id="playbook-container"></div>
+    </div>
+
+    <!-- QUIZ -->
+    <div id="sec-quiz" class="section">
+      <h2 class="sec-title">🧠 Knowledge Check</h2>
+      <p class="sec-sub">8 questions covering core conflict management concepts. Your best score is saved.</p>
+      <div id="quiz-container"></div>
+    </div>
+
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ╔══════════════════════════════════════════════════════╗
+// ║  SUPABASE CONFIG  —  paste your values below        ║
+// ╚══════════════════════════════════════════════════════╝
+const SUPABASE_URL = 'https://hmshmfxpbkgrhzdnzyco.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhtc2htZnhwYmtncmh6ZG56eWNvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0MjE3MTAsImV4cCI6MjA4ODk5NzcxMH0.-atifaYNHcRBtuyS4wjwbxwzV2GnIPqkDfRXQ9I2P4Q';
+
+// ── Supabase client (loaded via CDN) ──────────────────────────────────────
+let supabase;
+
+async function initSupabase() {
+  const { createClient } = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm');
+  supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  // Check existing session
+  const { data: { session } } = await supabase.auth.getSession();
+  if (session) {
+    await onSignedIn(session.user);
+  } else {
+    hideLoading();
+    showAuth();
+  }
+
+  // Listen for auth changes
+  supabase.auth.onAuthStateChange(async (event, session) => {
+    if (event === 'SIGNED_IN' && session) {
+      await onSignedIn(session.user);
+    } else if (event === 'SIGNED_OUT') {
+      onSignedOut();
+    }
+  });
+}
+
+// ── STATE ─────────────────────────────────────────────────────────────────
+let currentUser = null;
+let userProgress = {
+  scenarios_answered: {},
+  quiz_best_score: null,
+  quiz_attempts: 0,
+  skills_opened: []
+};
+
+// ── AUTH HANDLERS ─────────────────────────────────────────────────────────
+async function doLogin() {
+  const email = document.getElementById('l-email').value.trim();
+  const pass  = document.getElementById('l-pass').value;
+  if (!email || !pass) { showAuthMsg('error', 'Please enter your email and password.'); return; }
+  setAuthLoading('btn-login', true);
+  const { error } = await supabase.auth.signInWithPassword({ email, password: pass });
+  setAuthLoading('btn-login', false);
+  if (error) showAuthMsg('error', friendlyError(error.message));
+}
+
+async function doRegister() {
+  const name  = document.getElementById('r-name').value.trim();
+  const email = document.getElementById('r-email').value.trim();
+  const pass  = document.getElementById('r-pass').value;
+  if (!name)  { showAuthMsg('error', 'Please enter your full name.'); return; }
+  if (!email) { showAuthMsg('error', 'Please enter your email.'); return; }
+  if (pass.length < 6) { showAuthMsg('error', 'Password must be at least 6 characters.'); return; }
+  setAuthLoading('btn-register', true);
+  const { data, error } = await supabase.auth.signUp({
+    email, password: pass,
+    options: { data: { full_name: name } }
+  });
+  setAuthLoading('btn-register', false);
+  if (error) { showAuthMsg('error', friendlyError(error.message)); return; }
+  if (data.user && !data.session) {
+    showAuthMsg('success', '✅ Check your email to confirm your account, then sign in.');
+  }
+}
+
+async function doLogout() {
+  await supabase.auth.signOut();
+}
+
+// ── SIGNED IN ─────────────────────────────────────────────────────────────
+async function onSignedIn(user) {
+  currentUser = user;
+  const name = user.user_metadata?.full_name || user.email.split('@')[0];
+  document.getElementById('user-name-chip').textContent = name;
+
+  // Load or create progress row
+  const { data } = await supabase
+    .from('user_progress')
+    .select('*')
+    .eq('user_id', user.id)
+    .maybeSingle();
+
+  if (data) {
+    userProgress.scenarios_answered = data.scenarios_answered || {};
+    userProgress.quiz_best_score    = data.quiz_best_score;
+    userProgress.quiz_attempts      = data.quiz_attempts || 0;
+    userProgress.skills_opened      = data.skills_opened || [];
+  } else {
+    // First login — create row
+    await supabase.from('user_progress').insert({ user_id: user.id });
+  }
+
+  hideLoading();
+  document.getElementById('auth-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  buildAll();
+  renderProgressStrip();
+}
+
+function onSignedOut() {
+  currentUser = null;
+  userProgress = { scenarios_answered:{}, quiz_best_score:null, quiz_attempts:0, skills_opened:[] };
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('auth-screen').style.display = 'flex';
+  // Reset forms
+  ['l-email','l-pass','r-name','r-email','r-pass'].forEach(id => { const el = document.getElementById(id); if(el) el.value=''; });
+  showAuthMsg('', '');
+}
+
+// ── SAVE PROGRESS ─────────────────────────────────────────────────────────
+async function saveProgress() {
+  if (!currentUser) return;
+  await supabase.from('user_progress').upsert({
+    user_id: currentUser.id,
+    ...userProgress,
+    updated_at: new Date().toISOString()
+  }, { onConflict: 'user_id' });
+}
+
+// ── PROGRESS STRIP ─────────────────────────────────────────────────────────
+function renderProgressStrip() {
+  const scenDone  = Object.keys(userProgress.scenarios_answered).length;
+  const quiz      = userProgress.quiz_best_score;
+  const skillsDone = Math.min(userProgress.skills_opened.length, 7);
+  document.getElementById('progress-strip').innerHTML = `
+    <div class="prog-item"><div class="prog-dot ${scenDone===5?'done':''}"></div>Scenarios: ${scenDone}/5</div>
+    <div class="prog-item"><div class="prog-dot ${quiz!==null?'done':''}"></div>Quiz: ${quiz!==null?quiz+'/8 best':'Not attempted'}</div>
+    <div class="prog-item"><div class="prog-dot ${skillsDone>=7?'done':''}"></div>Skills reviewed: ${skillsDone}/7</div>
+  `;
+}
+
+// ── UI HELPERS ────────────────────────────────────────────────────────────
+function hideLoading() { document.getElementById('loading-screen').style.display = 'none'; }
+function showAuth()    { document.getElementById('auth-screen').style.display = 'flex'; }
+
+function switchTab(tab, btn) {
+  document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('login-form').style.display    = tab==='login'    ? 'block' : 'none';
+  document.getElementById('register-form').style.display = tab==='register' ? 'block' : 'none';
+  showAuthMsg('','');
+}
+
+function showAuthMsg(type, msg) {
+  const err = document.getElementById('auth-error');
+  const ok  = document.getElementById('auth-success');
+  err.style.display = type==='error'   && msg ? 'block' : 'none'; err.textContent = msg;
+  ok.style.display  = type==='success' && msg ? 'block' : 'none'; ok.textContent  = msg;
+}
+
+function setAuthLoading(id, loading) {
+  const btn = document.getElementById(id);
+  btn.disabled = loading;
+  btn.textContent = loading ? 'Please wait…' : (id==='btn-login' ? 'Sign In' : 'Create Account');
+}
+
+function showSection(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('sec-'+id).classList.add('active');
+  if (btn) btn.classList.add('active');
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+function showSectionByName(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => { b.classList.remove('active'); if(b.textContent.toLowerCase().includes(id)) b.classList.add('active'); });
+  document.getElementById('sec-'+id).classList.add('active');
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+function toggleCard(id, skillId) {
+  const body  = document.getElementById(id);
+  const arrow = document.getElementById(id+'-arrow');
+  const open  = body.classList.toggle('open');
+  if (arrow) arrow.classList.toggle('open', open);
+  if (open && skillId) trackSkill(skillId);
+}
+
+function trackSkill(id) {
+  if (!userProgress.skills_opened.includes(id)) {
+    userProgress.skills_opened.push(id);
+    saveProgress(); renderProgressStrip();
+  }
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+function friendlyError(msg) {
+  if (msg.includes('Invalid login'))   return 'Incorrect email or password.';
+  if (msg.includes('already registered')) return 'An account with that email already exists.';
+  if (msg.includes('Password should')) return 'Password must be at least 6 characters.';
+  if (msg.includes('valid email'))     return 'Please enter a valid email address.';
+  return msg || 'Something went wrong. Please try again.';
+}
+
+// ══════════════════════════════════════════════════════
+// CONTENT DATA
+// ══════════════════════════════════════════════════════
+
+const skillsData = [
+  { id:'s1', icon:'🔍', color:'#4F46E5', bg:'#EEF2FF', title:'1. Early Conflict Detection', sub:'Spot signals before they become arguments',
+    content:`<div style="font-weight:600;margin:12px 0 8px;font-size:15px">Early Warning Signals:</div>
+    <div style="font-size:15px;line-height:2.4">• Defensive tone in messages or brief replies<br>• Silence or sudden withdrawal from team communication<br>• Repeated minor mistakes from a normally strong performer<br>• Passive resistance — "okay…" but no follow-through<br>• Team members bypassing the supervisor entirely</div>
+    <div style="background:#EEF2FF;border-radius:8px;padding:14px;margin-top:14px">
+      <div style="font-size:12px;font-weight:600;color:#6B7280;margin-bottom:8px">ASK THIS INSTEAD:</div>
+      <div class="g2">
+        <div style="background:#FEE2E2;border-radius:6px;padding:12px"><div style="font-size:11px;color:#DC2626;font-weight:600">❌ NOT THIS</div><div style="font-size:15px;margin-top:5px">What's the problem?</div></div>
+        <div style="background:#DCFCE7;border-radius:6px;padding:12px"><div style="font-size:11px;color:#059669;font-weight:600">✅ THIS</div><div style="font-size:15px;margin-top:5px">What changed recently?</div></div>
+      </div>
+    </div>`},
+  { id:'s2', icon:'⚖️', color:'#7C3AED', bg:'#F5F3FF', title:'2. Neutral Framing', sub:'Separate the person from the behavior',
+    content:`<div style="font-weight:600;margin:12px 0 10px;font-size:15px">Reframe the Language:</div>
+    <div class="compare-row"><div class="cmp" style="background:#FEE2E2"><div class="cmp-label" style="color:#DC2626">❌ AVOID</div><div class="cmp-text">You're not careful with coding.</div></div><div class="cmp" style="background:#DCFCE7"><div class="cmp-label" style="color:#059669">✅ SAY THIS</div><div class="cmp-text">I noticed 4 documents coded differently than protocol.</div></div></div>
+    <div class="compare-row"><div class="cmp" style="background:#FEE2E2"><div class="cmp-label" style="color:#DC2626">❌ AVOID</div><div class="cmp-text">You're always late.</div></div><div class="cmp" style="background:#DCFCE7"><div class="cmp-label" style="color:#059669">✅ SAY THIS</div><div class="cmp-text">The last two batches were submitted after deadline.</div></div></div>
+    <div class="compare-row"><div class="cmp" style="background:#FEE2E2"><div class="cmp-label" style="color:#DC2626">❌ AVOID</div><div class="cmp-text">You're not a team player.</div></div><div class="cmp" style="background:#DCFCE7"><div class="cmp-label" style="color:#059669">✅ SAY THIS</div><div class="cmp-text">I've noticed you haven't responded to two team requests this week.</div></div></div>
+    <div style="font-size:14px;color:#7C3AED;font-weight:600;margin-top:10px;padding:10px 14px;background:#F5F3FF;border-radius:6px">💡 Lead with facts, patterns, and impact — never assumptions.</div>`},
+  { id:'s3', icon:'💬', color:'#0891B2', bg:'#ECFEFF', title:'3. 3-Step Conflict Conversation', sub:'Turn conflict into collaborative problem-solving',
+    content:`<div style="margin-top:12px">
+    <div class="step-row"><div class="step-num" style="background:#0891B2">1</div><div><div style="font-weight:700;color:#0891B2;font-size:15px">Observe — Facts Only</div><div style="font-size:14px;color:#6B7280;margin-top:2px">State only what you have observed.</div><div style="font-size:15px;font-style:italic;margin-top:6px">"Here's what I'm seeing…"</div></div></div>
+    <div class="step-row"><div class="step-num" style="background:#0891B2">2</div><div><div style="font-weight:700;color:#0891B2;font-size:15px">Impact — Why It Matters</div><div style="font-size:14px;color:#6B7280;margin-top:2px">Explain the effect on QC, rework, or confidence.</div><div style="font-size:15px;font-style:italic;margin-top:6px">"This affects QC, rework time, and client confidence."</div></div></div>
+    <div class="step-row"><div class="step-num" style="background:#0891B2">3</div><div><div style="font-weight:700;color:#0891B2;font-size:15px">Collaborate — Build Ownership</div><div style="font-size:14px;color:#6B7280;margin-top:2px">Invite them into the solution.</div><div style="font-size:15px;font-style:italic;margin-top:6px">"How do we prevent this going forward?"</div></div></div>
+    </div>`},
+  { id:'s4', icon:'👂', color:'#059669', bg:'#ECFDF5', title:'4. Listen Without Fixing Too Fast', sub:'Pause before jumping to solutions',
+    content:`<div class="g2" style="margin-top:12px">
+    <div><div style="font-weight:600;color:#DC2626;margin-bottom:10px;font-size:14px">❌ Common Mistakes</div><div style="font-size:14px;line-height:2.4">• Interrupting to correct mid-sentence<br>• Immediately defending the process<br>• Jumping to solutions before understanding</div></div>
+    <div><div style="font-weight:600;color:#059669;margin-bottom:10px;font-size:14px">✅ Better Approach</div><div style="font-size:14px;line-height:2.4">• Let them finish speaking fully<br>• Repeat back what you heard<br>• Confirm understanding before responding</div></div>
+    </div>
+    <div style="background:#ECFDF5;border-radius:8px;padding:14px;margin-top:14px;text-align:center">
+      <div style="font-style:italic;font-size:16px;color:#059669;font-weight:600">"Let me make sure I understand you correctly…"</div>
+      <div style="font-size:13px;color:#6B7280;margin-top:6px">This phrase alone de-escalates ~70% of tension.</div>
+    </div>`},
+  { id:'s5', icon:'🛡️', color:'#D97706', bg:'#FFFBEB', title:'5. Setting Clear Boundaries', sub:'Calm and firm — boundaries protect standards, not control',
+    content:`<div style="font-weight:600;margin:12px 0 10px;font-size:15px">Reframe the Language:</div>
+    <div class="compare-row"><div class="cmp" style="background:#FEE2E2"><div class="cmp-label" style="color:#DC2626">❌ AVOID</div><div class="cmp-text">This is non-negotiable, just do it.</div></div><div class="cmp" style="background:#DCFCE7"><div class="cmp-label" style="color:#059669">✅ SAY THIS</div><div class="cmp-text">This is the standard we have to meet for QC.</div></div></div>
+    <div class="compare-row"><div class="cmp" style="background:#FEE2E2"><div class="cmp-label" style="color:#DC2626">❌ AVOID</div><div class="cmp-text">If you don't like it…</div></div><div class="cmp" style="background:#DCFCE7"><div class="cmp-label" style="color:#059669">✅ SAY THIS</div><div class="cmp-text">Here's what success looks like going forward.</div></div></div>
+    <div class="compare-row"><div class="cmp" style="background:#FEE2E2"><div class="cmp-label" style="color:#DC2626">❌ AVOID</div><div class="cmp-text">You have to follow my decision.</div></div><div class="cmp" style="background:#DCFCE7"><div class="cmp-label" style="color:#059669">✅ SAY THIS</div><div class="cmp-text">The protocol exists to protect quality for the client.</div></div></div>`},
+  { id:'s6', icon:'🧭', color:'#DC2626', bg:'#FEF2F2', title:'6. Coach vs. Correct', sub:'Diagnose the gap before you respond',
+    content:`<div class="g2" style="margin-top:12px">
+    <div style="background:#05996910;border:1px solid #05996930;border-radius:8px;padding:14px;text-align:center"><div style="font-size:13px;color:#6B7280">You see a…</div><div style="font-weight:700;font-size:15px;margin:4px 0">Skill gap</div><div style="color:#059669;font-weight:700">→ Coach</div></div>
+    <div style="background:#0891B210;border:1px solid #0891B230;border-radius:8px;padding:14px;text-align:center"><div style="font-size:13px;color:#6B7280">You see a…</div><div style="font-weight:700;font-size:15px;margin:4px 0">Clarity gap</div><div style="color:#0891B2;font-weight:700">→ Clarify</div></div>
+    <div style="background:#D9770610;border:1px solid #D9770630;border-radius:8px;padding:14px;text-align:center"><div style="font-size:13px;color:#6B7280">You see a…</div><div style="font-weight:700;font-size:15px;margin:4px 0">Behavior gap</div><div style="color:#D97706;font-weight:700">→ Correct</div></div>
+    <div style="background:#DC262610;border:1px solid #DC262630;border-radius:8px;padding:14px;text-align:center"><div style="font-size:13px;color:#6B7280">You see a…</div><div style="font-weight:700;font-size:15px;margin:4px 0">Recurring pattern</div><div style="color:#DC2626;font-weight:700">→ Escalate</div></div>
+    </div>`},
+  { id:'s7', icon:'🌡️', color:'#7C3AED', bg:'#F5F3FF', title:'7. De-escalating High Emotions', sub:'Do not match their energy — slow everything down',
+    content:`<div style="font-weight:600;margin:12px 0 8px;font-size:15px">Rules:</div>
+    <div style="font-size:15px;line-height:2.4">→ Slow the conversation deliberately<br>→ Lower your voice — never raise it<br>→ Do not mirror high emotional energy<br>→ Pause the conversation if needed</div>
+    <div style="margin-top:14px"><div style="font-weight:600;margin-bottom:10px;font-size:15px">Phrases that work:</div>
+    <div style="background:#F5F3FF;border-radius:6px;padding:10px 14px;margin-bottom:8px;font-size:15px;font-style:italic;color:#7C3AED">"Let's pause for a moment."</div>
+    <div style="background:#F5F3FF;border-radius:6px;padding:10px 14px;margin-bottom:8px;font-size:15px;font-style:italic;color:#7C3AED">"I want us to solve this, not win an argument."</div>
+    <div style="background:#F5F3FF;border-radius:6px;padding:10px 14px;font-size:15px;font-style:italic;color:#7C3AED">"We can continue once emotions are lower."</div></div>`},
+];
+
+const scenarios = [
+  { id:1, title:"Reviewer Challenges a QC Decision", setup:"A reviewer pushes back on a QC correction, saying the feedback is unfair and inconsistent with past reviews.",
+    options:[
+      {text:"Defend the decision firmly and remind them you make the final call.",correct:false,feedback:"This creates a power struggle. It may win the moment but damages trust and creates resentment."},
+      {text:"Listen fully, then walk through the specific coding standard and how it applies.",correct:true,feedback:"Correct. This separates the decision from the ego. You're referencing the standard — not your authority."},
+      {text:"Tell them you'll look into it and get back to them later to avoid conflict.",correct:false,feedback:"Avoidance signals uncertainty and invites more challenges to future QC decisions."},
+      {text:"Acknowledge they may be right and soften the correction.",correct:false,feedback:"Accommodating without cause undermines quality standards and sets a precedent for bargaining over QC."}
+    ]},
+  { id:2, title:"Two Team Members Blaming Each Other", setup:"Two reviewers dispute who caused a batch error. Each blames the other and neither is taking ownership.",
+    options:[
+      {text:"Let them hash it out — it'll resolve itself.",correct:false,feedback:"Avoidance allows blame culture to spread and impacts team cohesion and quality."},
+      {text:"Side with whichever person you believe is right.",correct:false,feedback:"Taking sides without facts creates favoritism claims and worsens the conflict."},
+      {text:"Separate them, gather facts independently, then reframe around the process gap — not who's at fault.",correct:true,feedback:"Correct. Focus on the process failure, not the people. What needs to change to prevent this next time?"},
+      {text:"Document it and escalate to HR immediately.",correct:false,feedback:"Escalating too fast removes your authority. Try to resolve at the supervisor level first unless there's misconduct."}
+    ]},
+  { id:3, title:"High Performer Resisting Feedback", setup:"Your best reviewer becomes dismissive when you give corrective feedback, saying they 'know what they're doing.'",
+    options:[
+      {text:"Back off the feedback to preserve the relationship.",correct:false,feedback:"Accommodating performance gaps from high performers creates double standards and erodes team trust."},
+      {text:"Escalate immediately since it's disrespectful.",correct:false,feedback:"One instance doesn't warrant escalation. Correcting privately first is the right step."},
+      {text:"Acknowledge their strong track record, then tie the feedback to the protocol standard — not their skill.",correct:true,feedback:"Correct. Recognizing their value while anchoring the correction to standards keeps it professional and non-personal."},
+      {text:"Address it in the team meeting so everyone hears the same message.",correct:false,feedback:"Public correction damages trust and morale, especially for high performers. Always address individually first."}
+    ]},
+  { id:4, title:"Missed Deadlines with Excuses", setup:"A reviewer has missed two consecutive deadlines. Each time they have a different explanation, and nothing has changed.",
+    options:[
+      {text:"Accept the explanations and give them more time — things happen.",correct:false,feedback:"Continuing to accommodate without consequence signals that deadlines are optional."},
+      {text:"Document the pattern, then have a direct conversation framing it as a pattern — not isolated incidents.",correct:true,feedback:"Correct. Two incidents become a pattern. Address the trend, set a clear expectation, and document the conversation."},
+      {text:"Reassign their work immediately without a conversation.",correct:false,feedback:"Acting without a direct conversation bypasses the reviewer's chance to correct — and creates grievance risk."},
+      {text:"Send a group reminder about deadlines to avoid singling anyone out.",correct:false,feedback:"Group messages don't address individual accountability. The issue needs a direct, private conversation."}
+    ]},
+  { id:5, title:'Reviewer Feeling "Picked On"', setup:'A reviewer tells you they feel like they are always being singled out and that others make the same mistakes without feedback.',
+    options:[
+      {text:"Dismiss the concern — you treat everyone the same.",correct:false,feedback:"Dismissing the perception without exploring it damages trust. Even if untrue, the feeling is real to them."},
+      {text:"Apologize and ease up on feedback for a while.",correct:false,feedback:"Pulling back on legitimate feedback is unfair to quality standards and the rest of the team."},
+      {text:"Listen fully, validate the feeling, and then walk through how and why feedback is applied — offer consistency as a standard.",correct:true,feedback:"Correct. Acknowledge the perception, explain your feedback process, and reinforce that it's standard-based — not personal."},
+      {text:"Start giving everyone more feedback to make it seem equal.",correct:false,feedback:"Artificially increasing feedback elsewhere introduces confusion and dilutes meaningful correction."}
+    ]}
+];
+
+const stylesData = [
+  {id:'st1',icon:'🤝',color:'#059669',bg:'#ECFDF5',name:'Collaborating',tag:'Win–Win',when:'When the relationship and a thorough solution both matter. Leads to the strongest long-term outcomes.',how:'Work together openly. Ask: "What would work for both of us here?"'},
+  {id:'st2',icon:'⚡',color:'#DC2626',bg:'#FEF2F2',name:'Competing',tag:'Win–Lose',when:'When quality standards, protocols, or client expectations must be enforced with little room for negotiation.',how:'Be calm and direct. Anchor to the standard: "This is what QC requires."'},
+  {id:'st3',icon:'⏸️',color:'#6B7280',bg:'#F9FAFB',name:'Avoiding',tag:'Lose–Lose',when:'When emotions are too high or the issue is minor — use as a temporary pause, not a permanent solution.',how:'Name the pause: "Let\'s revisit this once we\'ve had time to think."'},
+  {id:'st4',icon:'🙏',color:'#D97706',bg:'#FFFBEB',name:'Accommodating',tag:'Lose–Win',when:'When the issue matters more to the other person or maintaining the relationship is the priority.',how:'Be intentional. Say: "I can support your approach on this one."'},
+  {id:'st5',icon:'⚖️',color:'#7C3AED',bg:'#F5F3FF',name:'Compromising',tag:'Split',when:'When time is limited and a quick, workable resolution is needed to keep work moving.',how:'Both sides give something: "Here\'s what I can flex on — what can you adjust?"'},
+];
+
+const questions = [
+  {q:"A reviewer responds to every message with 'okay' but never follows through. What is this a sign of?",opts:["Skill gap","Passive resistance / early conflict signal","Clarity gap","Scheduling issue"],answer:1},
+  {q:"Which phrasing is correct neutral framing?",opts:["You're careless with your work.","You always miss the point.","I noticed 3 documents coded outside protocol this week.","You clearly don't understand the process."],answer:2},
+  {q:"A reviewer is clearly upset and raising their voice. What's the first thing you should do?",opts:["Match their energy so they take you seriously.","Immediately escalate to HR.","Slow the conversation and lower your voice.","End the conversation without explanation."],answer:2},
+  {q:"A normally strong reviewer suddenly makes repeated small errors. What should you ask?",opts:["Why are you making so many mistakes?","Do you need to be retrained?","What changed recently?","Is there a performance issue I should document?"],answer:2},
+  {q:"In Step 2 of the 3-Step Conflict Conversation Framework, what should you communicate?",opts:["Your authority as supervisor","The impact of the behavior on QC, rework, or client confidence","The consequences if they don't change","The full history of the person's performance"],answer:1},
+  {q:"A reviewer misses a deadline for the second time with a different excuse. What's the best response?",opts:["Accept the excuse — things happen.","Send a group deadline reminder.","Document the pattern and have a direct conversation about the trend.","Reassign their work immediately."],answer:2},
+  {q:"Which conflict management style is most appropriate when a quality standard is non-negotiable?",opts:["Accommodating","Avoiding","Compromising","Competing"],answer:3},
+  {q:"A team member says they feel singled out. What should you do first?",opts:["Dismiss it — you treat everyone the same.","Listen fully and validate the perception before explaining your process.","Ease up on feedback temporarily.","Give everyone else more feedback to balance things out."],answer:1}
+];
+
+// ══════════════════════════════════════════════════════
+// BUILD FUNCTIONS
+// ══════════════════════════════════════════════════════
+
+function buildAll() {
+  buildSkills(); buildScenarios(); buildStyles(); buildPlaybook(); renderQuiz();
+  // Restore saved scenario answers
+  Object.entries(userProgress.scenarios_answered).forEach(([scId, {optIdx, correct}]) => {
+    const sc = scenarios.find(s => s.id == scId); if (!sc) return;
+    sc.options.forEach((o, i) => {
+      const btn = document.getElementById(`sc-${scId}-opt-${i}`); if (!btn) return;
+      btn.disabled = true;
+      if (i === optIdx) { btn.className='opt-btn '+(correct?'correct':'wrong'); btn.querySelector('.opt-icon').textContent=correct?'✓':'✗'; }
+      else if (o.correct) btn.className='opt-btn show-correct';
+    });
+    const chosen = sc.options[optIdx];
+    const fb = document.getElementById(`sc-fb-${scId}`);
+    if (fb) fb.innerHTML=`<div class="feedback-box" style="background:${correct?'#F0FDF4':'#FFF7F7'};border:1px solid ${correct?'#86EFAC':'#FECACA'}"><strong style="color:${correct?'#059669':'#DC2626'}">${correct?'✅ Great choice. ':'❌ Not the best approach. '}</strong>${chosen.feedback}</div>`;
+    const rst = document.getElementById(`sc-reset-${scId}`);
+    if (rst) rst.style.display='inline-block';
+  });
+}
+
+function buildSkills() {
+  document.getElementById('skills-container').innerHTML = skillsData.map(s=>`
+    <div class="card-collapsible">
+      <button class="card-header" onclick="toggleCard('${s.id}','${s.id}')">
+        <div style="display:flex;align-items:center;gap:12px">
+          <span style="font-size:26px">${s.icon}</span>
+          <div><div style="font-weight:700;color:${s.color};font-size:16px">${s.title}</div><div style="font-size:13px;color:#6B7280;margin-top:2px">${s.sub}</div></div>
+        </div>
+        <span id="${s.id}-arrow" class="arrow">▼</span>
+      </button>
+      <div id="${s.id}" class="card-body" style="border-color:${s.bg}">${s.content}</div>
+    </div>`).join('');
+}
+
+function buildScenarios() {
+  document.getElementById('scenarios-container').innerHTML = scenarios.map(sc=>`
+    <div class="card" id="sc-${sc.id}">
+      <div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:14px">
+        <div style="background:var(--navy);color:#fff;border-radius:6px;padding:5px 12px;font-size:13px;font-weight:700;white-space:nowrap">#${sc.id}</div>
+        <div><div style="font-weight:700;color:var(--navy);font-size:16px">${sc.title}</div><div style="font-size:14px;color:var(--gray500);margin-top:5px;font-style:italic;line-height:1.5">${sc.setup}</div></div>
+      </div>
+      ${sc.options.map((o,i)=>`<button class="opt-btn" id="sc-${sc.id}-opt-${i}" onclick="answerScenario(${sc.id},${i},${o.correct})"><span class="opt-icon">${String.fromCharCode(65+i)}</span><span>${o.text}</span></button>`).join('')}
+      <div id="sc-fb-${sc.id}"></div>
+      <button class="btn-sm" id="sc-reset-${sc.id}" style="display:none;margin-top:10px" onclick="resetScenario(${sc.id})">↺ Reset</button>
+    </div>`).join('');
+}
+
+function buildStyles() {
+  document.getElementById('styles-container').innerHTML = stylesData.map(s=>`
+    <div class="card-collapsible">
+      <button class="card-header" onclick="toggleCard('${s.id}')">
+        <div style="display:flex;align-items:center;gap:12px"><span style="font-size:26px">${s.icon}</span>
+        <div><div style="font-weight:700;color:${s.color};font-size:16px">${s.name}</div><span class="badge" style="background:${s.color}20;color:${s.color};margin-top:4px">${s.tag}</span></div></div>
+        <span id="${s.id}-arrow" class="arrow">▼</span>
+      </button>
+      <div id="${s.id}" class="card-body" style="border-color:${s.bg}">
+        <div class="g2" style="margin-top:12px">
+          <div style="background:${s.bg};border-radius:8px;padding:14px"><div style="font-size:12px;font-weight:600;color:${s.color};margin-bottom:7px">WHEN TO USE</div><div style="font-size:14px;line-height:1.7">${s.when}</div></div>
+          <div style="background:#F8FAFC;border-radius:8px;padding:14px;border:1px solid #E5E7EB"><div style="font-size:12px;font-weight:600;color:#4B5563;margin-bottom:7px">HOW TO USE IT</div><div style="font-size:14px;line-height:1.7">${s.how}</div></div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function buildPlaybook() {
+  document.getElementById('playbook-container').innerHTML = `
+  <div class="card">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px"><span style="font-size:22px">🔍</span><div style="font-weight:700;color:#4F46E5;font-size:16px">Before Conflict Escalates</div></div>
+    <div style="font-size:12px;font-weight:600;color:#9CA3AF;margin-bottom:10px">ASK YOURSELF:</div>
+    <div class="pb-row" style="background:#EEF2FF"><span style="color:#4F46E5;font-weight:700;min-width:20px">1</span>Is this issue recurring?</div>
+    <div class="pb-row" style="background:#EEF2FF"><span style="color:#4F46E5;font-weight:700;min-width:20px">2</span>Is this pressure-related or personal?</div>
+    <div class="pb-row" style="background:#EEF2FF"><span style="color:#4F46E5;font-weight:700;min-width:20px">3</span>Is this a misunderstanding or active resistance?</div>
+  </div>
+  <div class="card">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px"><span style="font-size:22px">💬</span><div style="font-weight:700;color:#059669;font-size:16px">During the Conversation</div></div>
+    <div style="font-size:12px;font-weight:600;color:#9CA3AF;margin-bottom:10px">YOUR APPROACH:</div>
+    <div class="pb-row" style="background:#ECFDF5"><span style="color:#059669;font-weight:700;min-width:20px">1</span>Start with facts — not assumptions or emotion</div>
+    <div class="pb-row" style="background:#ECFDF5"><span style="color:#059669;font-weight:700;min-width:20px">2</span>Listen fully before responding</div>
+    <div class="pb-row" style="background:#ECFDF5"><span style="color:#059669;font-weight:700;min-width:20px">3</span>Frame the impact clearly</div>
+    <div class="pb-row" style="background:#ECFDF5"><span style="color:#059669;font-weight:700;min-width:20px">4</span>Collaborate on the solution together</div>
+  </div>
+  <div class="card">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px"><span style="font-size:22px">📝</span><div style="font-weight:700;color:#D97706;font-size:16px">After the Conversation</div></div>
+    <div style="font-size:12px;font-weight:600;color:#9CA3AF;margin-bottom:10px">YOUR FOLLOW-THROUGH:</div>
+    <div class="pb-row" style="background:#FFFBEB"><span style="color:#D97706;font-weight:700;min-width:20px">1</span>Document any patterns or repeated issues</div>
+    <div class="pb-row" style="background:#FFFBEB"><span style="color:#D97706;font-weight:700;min-width:20px">2</span>Follow up within 1–2 days</div>
+    <div class="pb-row" style="background:#FFFBEB"><span style="color:#D97706;font-weight:700;min-width:20px">3</span>Reinforce expectations going forward</div>
+  </div>
+  <div class="card">
+    <div style="font-weight:700;color:var(--navy);font-size:16px;margin-bottom:14px">🧭 Diagnose Before You Respond</div>
+    <div class="g2">
+      <div style="background:#05996910;border:1px solid #05996930;border-radius:8px;padding:14px;text-align:center"><div style="font-size:12px;color:#6B7280">You see a…</div><div style="font-weight:700;font-size:15px;margin:4px 0">Skill gap</div><div style="color:#059669;font-weight:700">→ Coach</div></div>
+      <div style="background:#0891B210;border:1px solid #0891B230;border-radius:8px;padding:14px;text-align:center"><div style="font-size:12px;color:#6B7280">You see a…</div><div style="font-weight:700;font-size:15px;margin:4px 0">Clarity gap</div><div style="color:#0891B2;font-weight:700">→ Clarify</div></div>
+      <div style="background:#D9770610;border:1px solid #D9770630;border-radius:8px;padding:14px;text-align:center"><div style="font-size:12px;color:#6B7280">You see a…</div><div style="font-weight:700;font-size:15px;margin:4px 0">Behavior gap</div><div style="color:#D97706;font-weight:700">→ Correct</div></div>
+      <div style="background:#DC262610;border:1px solid #DC262630;border-radius:8px;padding:14px;text-align:center"><div style="font-size:12px;color:#6B7280">You see a…</div><div style="font-weight:700;font-size:15px;margin:4px 0">Recurring pattern</div><div style="color:#DC2626;font-weight:700">→ Escalate</div></div>
+    </div>
+  </div>`;
+}
+
+// ── SCENARIO INTERACTIONS ─────────────────────────────────────────────────
+function answerScenario(scId, optIdx, correct) {
+  const sc = scenarios.find(s => s.id === scId);
+  sc.options.forEach((o, i) => {
+    const btn = document.getElementById(`sc-${scId}-opt-${i}`);
+    btn.disabled = true;
+    if (i===optIdx) { btn.className='opt-btn '+(correct?'correct':'wrong'); btn.querySelector('.opt-icon').textContent=correct?'✓':'✗'; }
+    else if (o.correct) btn.className='opt-btn show-correct';
+  });
+  const chosen = sc.options[optIdx];
+  document.getElementById(`sc-fb-${scId}`).innerHTML=`<div class="feedback-box" style="background:${correct?'#F0FDF4':'#FFF7F7'};border:1px solid ${correct?'#86EFAC':'#FECACA'}"><strong style="color:${correct?'#059669':'#DC2626'}">${correct?'✅ Great choice. ':'❌ Not the best approach. '}</strong>${chosen.feedback}</div>`;
+  document.getElementById(`sc-reset-${scId}`).style.display='inline-block';
+  userProgress.scenarios_answered[scId] = { optIdx, correct };
+  saveProgress(); renderProgressStrip();
+  showToast(correct ? '✅ Correct! Progress saved.' : '📖 Progress saved.');
+}
+
+function resetScenario(scId) {
+  const sc = scenarios.find(s => s.id === scId);
+  sc.options.forEach((o, i) => {
+    const btn = document.getElementById(`sc-${scId}-opt-${i}`);
+    btn.className='opt-btn'; btn.disabled=false;
+    btn.querySelector('.opt-icon').textContent=String.fromCharCode(65+i);
+  });
+  document.getElementById(`sc-fb-${scId}`).innerHTML='';
+  document.getElementById(`sc-reset-${scId}`).style.display='none';
+  delete userProgress.scenarios_answered[scId];
+  saveProgress(); renderProgressStrip();
+}
+
+// ── QUIZ ──────────────────────────────────────────────────────────────────
+let quiz = { current:0, score:0, answered:false, done:false };
+
+function renderQuiz() {
+  const c = document.getElementById('quiz-container');
+  if (quiz.done) {
+    const s=quiz.score, t=questions.length;
+    const msg = s>=7?"Excellent! You have a strong grasp of conflict management.":s>=5?"Good foundation — review the Skills section to strengthen weaker areas.":"Review the Skills and Scenarios sections and try again.";
+    c.innerHTML=`<div class="card" style="text-align:center">
+      <div style="font-size:52px;margin-bottom:12px">${s>=7?"🏆":s>=5?"👍":"📚"}</div>
+      <div style="font-size:32px;font-weight:800;color:var(--navy)">${s} / ${t}</div>
+      <div style="font-size:15px;color:var(--gray500);margin-bottom:20px;line-height:1.6">${msg}</div>
+      ${userProgress.quiz_best_score!==null?`<div style="font-size:13px;color:var(--green);font-weight:600;margin-bottom:16px">🏅 Best score: ${userProgress.quiz_best_score}/${t} · Attempts: ${userProgress.quiz_attempts}</div>`:''}
+      <div class="result-grid">
+        <div class="result-cell" style="background:#DCFCE7"><div style="font-size:30px;font-weight:800;color:var(--green)">${s}</div><div style="font-size:12px;color:#065F46">Correct</div></div>
+        <div class="result-cell" style="background:#FEE2E2"><div style="font-size:30px;font-weight:800;color:var(--red)">${t-s}</div><div style="font-size:12px;color:#7F1D1D">To Review</div></div>
+      </div>
+      <button class="btn-primary" onclick="resetQuiz()" style="margin-right:10px">↺ Retake Quiz</button>
+      <button class="btn-outline" onclick="showSectionByName('skills')">Review Skills →</button>
+    </div>`;
+    return;
+  }
+  const q=questions[quiz.current];
+  c.innerHTML=`<div class="card">
+    <div style="display:flex;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+      <div style="font-size:14px;color:var(--gray500)">Question ${quiz.current+1} of ${questions.length}</div>
+      <div style="font-size:14px;color:var(--indigo);font-weight:700">Score: ${quiz.score}/${quiz.current}</div>
+    </div>
+    <div class="q-bar"><div class="q-fill" style="width:${(quiz.current/questions.length)*100}%"></div></div>
+    <div style="font-weight:700;color:var(--navy);font-size:16px;margin-bottom:18px;line-height:1.6">${q.q}</div>
+    <div id="q-opts">${q.opts.map((o,i)=>`<button class="q-opt" id="qopt-${i}" onclick="answerQuiz(${i})"><span style="font-weight:800;min-width:22px">${String.fromCharCode(65+i)}.</span>${o}</button>`).join('')}</div>
+    <div id="q-next" style="margin-top:18px;text-align:right;display:none">
+      <button class="btn-primary" onclick="nextQuestion()">${quiz.current+1<questions.length?'Next Question →':'See Results'}</button>
+    </div>
+  </div>`;
+}
+
+function answerQuiz(idx) {
+  if (quiz.answered) return;
+  quiz.answered=true;
+  const q=questions[quiz.current], correct=idx===q.answer;
+  if (correct) quiz.score++;
+  q.opts.forEach((o,i) => {
+    const btn=document.getElementById(`qopt-${i}`); btn.disabled=true;
+    if (i===idx&&correct) btn.className='q-opt qcorrect';
+    else if (i===idx) btn.className='q-opt qwrong';
+    else if (i===q.answer) btn.className='q-opt qshow';
+  });
+  document.getElementById('q-next').style.display='block';
+}
+
+function nextQuestion() {
+  quiz.current++; quiz.answered=false;
+  if (quiz.current>=questions.length) {
+    quiz.done=true;
+    userProgress.quiz_attempts++;
+    if (userProgress.quiz_best_score===null||quiz.score>userProgress.quiz_best_score)
+      userProgress.quiz_best_score=quiz.score;
+    saveProgress(); renderProgressStrip();
+  }
+  renderQuiz();
+}
+
+function resetQuiz() {
+  quiz={current:0,score:0,answered:false,done:false};
+  renderQuiz();
+}
+
+// ── BOOT ──────────────────────────────────────────────────────────────────
+initSupabase();
+</script>
+</body>
+</html>
