@@ -16,67 +16,146 @@
 <meta name="twitter:image" content="https://supervisor-training.vercel.app/preview.png" />
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Supervisor Leadership Training</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..800&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --navy:#1E3A5F;--navy2:#2D5986;--indigo:#4F46E5;--violet:#7C3AED;
-  --cyan:#0891B2;--green:#059669;--amber:#D97706;--red:#DC2626;
-  --gray50:#F8FAFC;--gray100:#F1F5F9;--gray200:#E5E7EB;
-  --gray400:#9CA3AF;--gray500:#6B7280;--gray700:#374151;
-  --radius:12px;--shadow:0 1px 6px rgba(0,0,0,.08);
+  --ink:#0B1526;--navy:#12233D;--navy2:#1B3A63;--indigo:#4F46E5;--violet:#7C3AED;
+  --grad:linear-gradient(135deg,#4F46E5 0%,#7C3AED 100%);
+  --green:#059669;--green-bg:#ECFDF5;--green-line:#A7F3D0;
+  --red:#DC2626;--red-bg:#FEF2F2;--red-line:#FECACA;
+  --amber:#B45309;--cyan:#0E7490;
+  --s0:#FFFFFF;--s1:#F7F8FB;--s2:#EEF1F6;
+  --t1:#0B1526;--t2:#3D4A5E;--t3:#64748B;--t4:#94A3B8;
+  --line:#E4E8EF;
+  --r-sm:10px;--r-md:14px;--r-lg:20px;
+  --sh-sm:0 1px 2px rgba(11,21,38,.05),0 1px 8px rgba(11,21,38,.04);
+  --sh-md:0 2px 6px rgba(11,21,38,.06),0 8px 24px rgba(11,21,38,.07);
+  --sh-lg:0 4px 12px rgba(11,21,38,.10),0 24px 56px rgba(11,21,38,.14);
+  --ease:cubic-bezier(.4,0,.2,1);
+  /* legacy aliases — removed in final sweep */
+  --gray50:var(--s1);--gray100:var(--s2);--gray200:var(--line);
+  --gray400:var(--t4);--gray500:var(--t3);--gray700:var(--t2);
+  --radius:var(--r-md);--shadow:var(--sh-sm);
 }
-html{font-size:16px}
-body{font-family:'Segoe UI',Arial,sans-serif;background:var(--gray50);color:var(--gray700);min-height:100vh}
-button{font-family:inherit;cursor:pointer}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--s1);color:var(--t2);min-height:100vh;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+button{font-family:inherit;cursor:pointer;color:inherit}
 input{font-family:inherit}
+:focus-visible{outline:2px solid var(--indigo);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}html{scroll-behavior:auto}}
+.icon{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.icon svg{width:20px;height:20px}
 
 /* AUTH */
-#auth-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px;background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%)}
-.auth-box{background:#fff;border-radius:16px;padding:36px 32px;width:100%;max-width:420px;box-shadow:0 8px 32px rgba(0,0,0,.2)}
-.auth-logo{text-align:center;margin-bottom:24px}
-.auth-logo h1{color:var(--navy);font-size:20px;font-weight:800;margin-top:8px}
-.auth-logo p{color:var(--gray500);font-size:13px;margin-top:4px}
-.auth-tabs{display:flex;border:1px solid var(--gray200);border-radius:8px;overflow:hidden;margin-bottom:24px}
-.auth-tab{flex:1;padding:10px;border:none;background:#fff;font-size:14px;font-weight:600;color:var(--gray500);transition:all .15s}
-.auth-tab.active{background:var(--navy);color:#fff}
+#auth-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px;
+  background:radial-gradient(1100px 700px at 85% -10%,rgba(124,58,237,.38),transparent 60%),
+             radial-gradient(900px 650px at -10% 110%,rgba(79,70,229,.32),transparent 55%),
+             var(--ink)}
+.auth-box{background:var(--s0);border-radius:var(--r-lg);padding:40px 36px;width:100%;max-width:440px;box-shadow:var(--sh-lg)}
+.brand-tile{width:52px;height:52px;border-radius:15px;background:var(--grad);display:inline-flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 10px 24px rgba(79,70,229,.35)}
+.brand-tile svg{width:28px;height:28px}
+.auth-logo{text-align:center;margin-bottom:26px}
+.auth-logo h1{color:var(--t1);font-size:20px;font-weight:750;letter-spacing:-.02em;margin-top:16px}
+.auth-logo p{color:var(--t3);font-size:13.5px;margin-top:5px}
+.auth-tabs{display:flex;background:var(--s2);border-radius:12px;padding:4px;gap:4px;margin-bottom:22px}
+.auth-tab{flex:1;padding:9px;border:none;background:transparent;border-radius:9px;font-size:14px;font-weight:600;color:var(--t3);transition:all .18s var(--ease)}
+.auth-tab.active{background:var(--s0);color:var(--t1);box-shadow:var(--sh-sm)}
 .form-group{margin-bottom:16px}
-.form-group label{display:block;font-size:13px;font-weight:600;color:var(--gray700);margin-bottom:6px}
-.form-group input{width:100%;padding:11px 14px;border:1.5px solid var(--gray200);border-radius:8px;font-size:15px;outline:none;transition:border .15s}
-.form-group input:focus{border-color:var(--navy)}
-.btn-auth{width:100%;padding:12px;background:var(--navy);color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:700;margin-top:4px;transition:background .15s}
-.btn-auth:hover{background:var(--navy2)}
+.form-group label{display:block;font-size:13px;font-weight:600;color:var(--t2);margin-bottom:6px}
+.form-group input{width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:var(--r-sm);font-size:15px;outline:none;background:var(--s0);color:var(--t1);transition:border-color .15s,box-shadow .15s}
+.form-group input::placeholder{color:var(--t4)}
+.form-group input:focus{border-color:var(--indigo);box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+.btn-auth{width:100%;padding:13px;background:var(--grad);color:#fff;border:none;border-radius:var(--r-sm);font-size:15px;font-weight:700;margin-top:6px;transition:filter .15s,transform .1s;box-shadow:0 6px 16px rgba(79,70,229,.28)}
+.btn-auth:hover{filter:brightness(1.08)}
+.btn-auth:active{transform:translateY(1px)}
 .btn-auth:disabled{opacity:.6;cursor:not-allowed}
-.auth-error{background:#FEE2E2;color:var(--red);font-size:13px;padding:10px 12px;border-radius:8px;margin-bottom:14px;display:none}
-.auth-success{background:#DCFCE7;color:var(--green);font-size:13px;padding:10px 12px;border-radius:8px;margin-bottom:14px;display:none}
+.auth-error{background:var(--red-bg);border:1px solid var(--red-line);color:var(--red);font-size:13px;padding:10px 12px;border-radius:var(--r-sm);margin-bottom:14px;display:none}
+.auth-success{background:var(--green-bg);border:1px solid var(--green-line);color:var(--green);font-size:13px;padding:10px 12px;border-radius:var(--r-sm);margin-bottom:14px;display:none}
+.auth-note{text-align:center;font-size:12px;color:var(--t4);margin-top:18px}
 
-/* APP */
+/* TOPBAR */
 #app{display:none}
-#header{background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);color:#fff;padding:16px 24px 0}
-.header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:10px}
-.header-brand h1{font-size:clamp(15px,3vw,20px);font-weight:800}
-.header-brand p{font-size:12px;opacity:.75;margin-top:2px}
-.header-user{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.user-chip{background:rgba(255,255,255,.15);border-radius:20px;padding:6px 14px;font-size:13px;font-weight:600}
-.btn-logout{background:rgba(255,255,255,.2);border:none;color:#fff;border-radius:8px;padding:7px 14px;font-size:13px;font-weight:600;transition:background .15s}
-.btn-logout:hover{background:rgba(255,255,255,.35)}
-#nav{display:flex;gap:2px;flex-wrap:wrap;margin-top:4px}
-.nav-btn{padding:9px 14px;border:none;border-radius:8px 8px 0 0;font-size:13px;font-weight:600;background:transparent;color:rgba(255,255,255,.8);transition:all .15s;white-space:nowrap}
-.nav-btn.active{background:var(--gray50);color:var(--navy)}
-.nav-btn:hover:not(.active){background:rgba(255,255,255,.15)}
-.progress-strip{background:rgba(255,255,255,.1);padding:10px 24px;display:flex;gap:20px;flex-wrap:wrap;align-items:center}
-.prog-item{font-size:12px;color:rgba(255,255,255,.85);display:flex;align-items:center;gap:6px}
-.prog-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.35)}
-.prog-dot.done{background:#4ADE80}
+.topbar{position:sticky;top:0;z-index:100;background:rgba(11,21,38,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,.06)}
+.topbar-inner{max-width:1120px;margin:0 auto;padding:0 20px;height:64px;display:flex;align-items:center;gap:18px}
+.brand{display:flex;align-items:center;gap:11px;min-width:0}
+.brand-mark{width:36px;height:36px;border-radius:10px;background:var(--grad);display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0}
+.brand-mark svg{width:20px;height:20px}
+.brand-name{color:#fff;font-weight:700;font-size:14.5px;letter-spacing:-.01em;white-space:nowrap}
+.brand-sub{color:rgba(255,255,255,.55);font-size:11px;white-space:nowrap;margin-top:1px}
+.pill-nav{display:flex;gap:4px;margin-left:auto;overflow-x:auto;scrollbar-width:none;padding:4px 2px}
+.pill-nav::-webkit-scrollbar{display:none}
+.nav-pill{display:flex;align-items:center;gap:7px;padding:8px 14px;border:none;border-radius:99px;background:transparent;color:rgba(255,255,255,.72);font-size:13.5px;font-weight:600;white-space:nowrap;transition:background .18s var(--ease),color .18s var(--ease)}
+.nav-pill .icon svg{width:16px;height:16px}
+.nav-pill:hover{background:rgba(255,255,255,.1);color:#fff}
+.nav-pill.active{background:#fff;color:var(--navy)}
+.topbar-user{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.avatar{width:34px;height:34px;border-radius:50%;background:var(--grad);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700;letter-spacing:.02em}
+.btn-signout{background:transparent;border:none;color:rgba(255,255,255,.72);font-size:13px;font-weight:600;padding:8px 12px;border-radius:99px;transition:background .18s,color .18s}
+.btn-signout:hover{background:rgba(255,255,255,.1);color:#fff}
+@media(max-width:860px){
+  .brand-sub{display:none}
+  .topbar-inner{flex-wrap:wrap;height:auto;padding:10px 14px 6px;row-gap:2px}
+  .brand{flex:1}
+  .pill-nav{order:3;width:100%;margin-left:0}
+}
 
 /* MAIN */
-#main{max-width:880px;margin:0 auto;padding:28px 16px}
+#main{max-width:920px;margin:0 auto;padding:32px 20px 72px}
 .section{display:none}
-.section.active{display:block}
-h2.sec-title{color:var(--navy);font-size:18px;margin-bottom:4px}
-.sec-sub{color:var(--gray500);font-size:13px;margin-bottom:18px}
+.section.active{display:block;animation:fadeUp .35s var(--ease)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.sec-head{display:flex;align-items:center;gap:13px;margin-bottom:22px}
+.sec-icon{width:42px;height:42px;border-radius:13px;background:rgba(79,70,229,.1);color:var(--indigo);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sec-title{color:var(--t1);font-size:21px;font-weight:750;letter-spacing:-.02em}
+.sec-sub{color:var(--t3);font-size:13.5px;margin-top:2px}
+.sec-count{margin-left:auto;font-size:12.5px;font-weight:600;color:var(--indigo);background:rgba(79,70,229,.1);padding:6px 13px;border-radius:99px;white-space:nowrap}
 
 /* CARDS */
-.card{background:#fff;border-radius:var(--radius);padding:22px;margin-bottom:14px;box-shadow:var(--shadow)}
+.card{background:var(--s0);border:1px solid var(--line);border-radius:var(--r-md);padding:24px;margin-bottom:16px;box-shadow:var(--sh-sm)}
+
+/* ACCORDION */
+.acc{background:var(--s0);border:1px solid var(--line);border-radius:var(--r-md);margin-bottom:12px;box-shadow:var(--sh-sm);transition:box-shadow .2s var(--ease)}
+.acc:hover{box-shadow:var(--sh-md)}
+.acc-head{width:100%;background:none;border:none;padding:18px 20px;display:flex;align-items:center;gap:14px;text-align:left;border-radius:var(--r-md)}
+.acc-num{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13.5px;flex-shrink:0}
+.acc-txt{min-width:0;flex:1}
+.acc-title{display:block;font-weight:700;color:var(--t1);font-size:15.5px;letter-spacing:-.01em}
+.acc-sub{display:block;font-size:13px;color:var(--t3);margin-top:2px}
+.acc-meta{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.acc-check{color:var(--green);opacity:0;transition:opacity .25s}
+.acc[data-done] .acc-check{opacity:1}
+.chev{color:var(--t4);transition:transform .25s var(--ease)}
+.acc[data-open] .chev{transform:rotate(180deg)}
+.acc-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .3s var(--ease)}
+.acc-body-in{overflow:hidden;min-height:0;padding:0 20px}
+.acc[data-open] .acc-body{grid-template-rows:1fr}
+.acc[data-open] .acc-body-in{padding-bottom:22px}
+
+/* BUTTONS */
+.btn-primary{background:var(--grad);color:#fff;border:none;border-radius:var(--r-sm);padding:12px 22px;font-weight:700;font-size:14px;transition:filter .15s,transform .1s;box-shadow:0 4px 12px rgba(79,70,229,.25);display:inline-flex;align-items:center;gap:8px}
+.btn-primary:hover{filter:brightness(1.08)}
+.btn-primary:active{transform:translateY(1px)}
+.btn-outline{background:var(--s0);border:1.5px solid var(--line);color:var(--t2);border-radius:var(--r-sm);padding:11px 22px;font-weight:650;font-size:14px;transition:all .15s;display:inline-flex;align-items:center;gap:8px}
+.btn-outline:hover{border-color:var(--indigo);color:var(--indigo)}
+.btn-sm{background:none;border:1px solid var(--line);border-radius:8px;padding:7px 14px;font-size:13px;font-weight:600;color:var(--t3);transition:all .15s;display:inline-flex;align-items:center;gap:6px}
+.btn-sm:hover{background:var(--s2);color:var(--t2)}
+.btn-sm .icon svg{width:14px;height:14px}
+
+/* TOAST */
+#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(70px);background:var(--ink);color:#fff;padding:12px 22px;border-radius:99px;font-size:13.5px;font-weight:600;opacity:0;transition:all .35s var(--ease);pointer-events:none;z-index:9999;white-space:nowrap;box-shadow:var(--sh-lg)}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* LOADING */
+#loading-screen{position:fixed;inset:0;background:var(--ink);display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:18px;color:#fff}
+.load-mark{width:56px;height:56px;border-radius:16px;background:var(--grad);display:flex;align-items:center;justify-content:center;color:#fff;animation:pulse 1.5s var(--ease) infinite}
+.load-mark svg{width:30px;height:30px}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.9);opacity:.7}}
+.load-text{font-size:13px;color:rgba(255,255,255,.6);font-weight:500}
+
+/* ═══ LEGACY (replaced task-by-task, removed in final sweep) ═══ */
 .card-collapsible{background:#fff;border-radius:var(--radius);margin-bottom:10px;overflow:hidden;box-shadow:var(--shadow)}
 .card-header{width:100%;background:none;border:none;padding:18px 20px;display:flex;align-items:center;justify-content:space-between;text-align:left;gap:12px}
 .card-header:hover{background:var(--gray50)}
@@ -84,27 +163,17 @@ h2.sec-title{color:var(--navy);font-size:18px;margin-bottom:4px}
 .card-body.open{display:block}
 .arrow{color:var(--gray400);font-size:13px;flex-shrink:0;transition:transform .2s}
 .arrow.open{transform:rotate(180deg)}
-
-/* LAYOUT */
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @media(max-width:560px){.g2{grid-template-columns:1fr}}
-
-/* HOME */
 .home-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:16px}
 .home-card{background:#fff;border:2px solid var(--gray200);border-radius:var(--radius);padding:18px;cursor:pointer;text-align:left;transition:all .2s;box-shadow:var(--shadow)}
 .home-card:hover{transform:translateY(-3px);box-shadow:0 6px 18px rgba(0,0,0,.1)}
-
-/* COMPARE */
 .compare-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
 .cmp{flex:1;border-radius:8px;padding:12px;min-width:130px}
 .cmp-label{font-size:11px;font-weight:700;margin-bottom:5px}
 .cmp-text{font-size:14px;line-height:1.5}
-
-/* STEPS */
 .step-row{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start}
 .step-num{width:34px;height:34px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0}
-
-/* SCENARIOS */
 .opt-btn{width:100%;border:1.5px solid var(--gray200);border-radius:8px;padding:12px 16px;text-align:left;font-size:14px;background:#fff;display:flex;align-items:flex-start;gap:12px;margin-bottom:8px;transition:all .15s;line-height:1.5}
 .opt-btn:hover:not(:disabled){background:var(--gray50);border-color:#94A3B8}
 .opt-btn.correct{background:#DCFCE7;border:2px solid var(--green);color:#065F46}
@@ -112,8 +181,6 @@ h2.sec-title{color:var(--navy);font-size:18px;margin-bottom:4px}
 .opt-btn.show-correct{background:#F0FDF4;border-color:#86EFAC}
 .opt-icon{width:24px;height:24px;border-radius:50%;border:2px solid currentColor;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:1px}
 .feedback-box{border-radius:0 0 8px 8px;padding:12px 16px;font-size:14px;margin-top:-6px;margin-bottom:8px;line-height:1.6}
-
-/* QUIZ */
 .q-bar{background:var(--gray100);height:7px;border-radius:4px;margin-bottom:22px;overflow:hidden}
 .q-fill{background:var(--indigo);height:7px;border-radius:4px;transition:width .4s}
 .q-opt{width:100%;border:1.5px solid var(--gray200);border-radius:8px;padding:13px 16px;text-align:left;font-size:15px;background:#fff;display:flex;gap:10px;align-items:flex-start;margin-bottom:8px;transition:all .15s;line-height:1.5}
@@ -123,36 +190,19 @@ h2.sec-title{color:var(--navy);font-size:18px;margin-bottom:4px}
 .q-opt.qshow{background:#F0FDF4;border-color:#86EFAC}
 .result-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:22px}
 .result-cell{border-radius:10px;padding:18px;text-align:center}
-
-/* BUTTONS */
-.btn-primary{background:var(--navy);color:#fff;border:none;border-radius:8px;padding:11px 22px;font-weight:700;font-size:14px;transition:background .15s}
-.btn-primary:hover{background:var(--navy2)}
-.btn-outline{background:none;border:2px solid var(--navy);color:var(--navy);border-radius:8px;padding:11px 22px;font-weight:700;font-size:14px;transition:all .15s}
-.btn-outline:hover{background:var(--navy);color:#fff}
-.btn-sm{background:none;border:1px solid var(--gray200);border-radius:6px;padding:6px 14px;font-size:13px;color:var(--gray500);transition:all .15s}
-.btn-sm:hover{background:var(--gray100)}
-
-/* MISC */
 .badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700}
 .pb-row{border-radius:7px;padding:10px 14px;margin-bottom:7px;font-size:15px;display:flex;gap:12px;align-items:center;line-height:1.5}
 .quote-box{background:var(--navy);color:#fff;border-radius:var(--radius);padding:22px;text-align:center;margin-top:18px}
 .quote-box p{font-style:italic;font-size:16px;opacity:.9;line-height:1.7}
-
-/* TOAST */
-#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(60px);background:#1E3A5F;color:#fff;padding:12px 22px;border-radius:24px;font-size:14px;font-weight:600;opacity:0;transition:all .35s;pointer-events:none;z-index:9999;white-space:nowrap}
-#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-
-/* LOADING */
-#loading-screen{position:fixed;inset:0;background:var(--navy);display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:14px;color:#fff}
-.spinner{width:40px;height:40px;border:4px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
+/* ═══ END LEGACY ═══ */
 
 @media print{
-  #header,#auth-screen,#loading-screen,.btn-sm,.btn-primary,.btn-outline,.btn-logout,.progress-strip{display:none!important}
+  .topbar,#auth-screen,#loading-screen,.btn-sm,.btn-primary,.btn-outline,.btn-signout{display:none!important}
   .section{display:block!important}
   .card-body{display:block!important}
+  .acc-body{grid-template-rows:1fr!important}
   body{background:#fff}
-  .card,.card-collapsible{box-shadow:none;border:1px solid #ddd}
+  .card,.card-collapsible,.acc{box-shadow:none;border:1px solid #ddd}
 }
 </style>
 </head>
@@ -160,15 +210,15 @@ h2.sec-title{color:var(--navy);font-size:18px;margin-bottom:4px}
 
 <!-- LOADING -->
 <div id="loading-screen">
-  <div class="spinner"></div>
-  <div style="font-size:14px;opacity:.8">Loading…</div>
+  <div class="load-mark" data-icon="logo"></div>
+  <div class="load-text">Loading your training…</div>
 </div>
 
 <!-- AUTH -->
 <div id="auth-screen" style="display:none">
   <div class="auth-box">
     <div class="auth-logo">
-      <div style="font-size:38px">🧑‍💼</div>
+      <span class="brand-tile" data-icon="logo"></span>
       <h1>Supervisor Leadership Training</h1>
       <p>Conflict Management Practice Tool</p>
     </div>
@@ -193,33 +243,28 @@ h2.sec-title{color:var(--navy);font-size:18px;margin-bottom:4px}
       <div class="form-group"><label>Password (min 6 chars)</label><input id="r-pass" type="password" placeholder="••••••••" autocomplete="new-password" onkeydown="if(event.key==='Enter')doRegister()"/></div>
       <button class="btn-auth" id="btn-register" onclick="doRegister()">Create Account</button>
     </div>
-    <p style="text-align:center;font-size:12px;color:var(--gray400);margin-top:18px">Powered by Supabase · Progress saved automatically</p>
+    <p class="auth-note">Your progress is saved automatically to your account.</p>
   </div>
 </div>
 
 <!-- APP -->
 <div id="app" style="display:none">
-  <div id="header">
-    <div class="header-top">
-      <div class="header-brand">
-        <h1>Supervisor Leadership Training</h1>
-        <p>Conflict Management Practice Tool</p>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <span class="brand-mark" data-icon="logo"></span>
+        <div>
+          <div class="brand-name">Supervisor Training</div>
+          <div class="brand-sub">Conflict Management</div>
+        </div>
       </div>
-      <div class="header-user">
-        <span class="user-chip" id="user-name-chip"></span>
-        <button class="btn-logout" onclick="doLogout()">Sign Out</button>
+      <nav class="pill-nav" id="nav" aria-label="Sections"></nav>
+      <div class="topbar-user">
+        <span class="avatar" id="user-avatar"></span>
+        <button class="btn-signout" onclick="doLogout()">Sign out</button>
       </div>
     </div>
-    <div class="progress-strip" id="progress-strip"></div>
-    <div id="nav">
-      <button class="nav-btn active" onclick="showSection('home',this)">🏠 Home</button>
-      <button class="nav-btn" onclick="showSection('skills',this)">🔑 Skills</button>
-      <button class="nav-btn" onclick="showSection('scenarios',this)">🎭 Scenarios</button>
-      <button class="nav-btn" onclick="showSection('styles',this)">🗂️ Styles</button>
-      <button class="nav-btn" onclick="showSection('playbook',this)">📋 Playbook</button>
-      <button class="nav-btn" onclick="showSection('quiz',this)">🧠 Quiz</button>
-    </div>
-  </div>
+  </header>
 
   <div id="main">
 
@@ -240,7 +285,7 @@ h2.sec-title{color:var(--navy);font-size:18px;margin-bottom:4px}
       </div>
       <div class="home-grid">
         <div class="home-card" onclick="showSectionByName('skills')" style="border-color:#4F46E530"><div style="font-size:26px;margin-bottom:8px">🔑</div><div style="font-weight:700;color:var(--indigo);font-size:14px">Skills</div><div style="font-size:12px;color:var(--gray500);margin-top:3px">7 core skills with examples</div></div>
-        <div class="home-card" onclick="showSectionByName('scenarios')" style="border-color:#05996930"><div style="font-size:26px;margin-bottom:8px">🎭</div><div style="font-weight:700;color:var(--green);font-size:14px">Scenarios</div><div style="font-size:12px;color:var(--gray500);margin-top:3px">5 real workplace situations</div></div>
+        <div class="home-card" onclick="showSectionByName('scenarios')" style="border-color:#05996930"><div style="font-size:26px;margin-bottom:8px">🎭</div><div style="font-weight:700;color:var(--green);font-size:14px">Scenarios</div><div style="font-size:12px;color:var(--gray500);margin-top:3px">6 real workplace situations</div></div>
         <div class="home-card" onclick="showSectionByName('styles')" style="border-color:#D9770630"><div style="font-size:26px;margin-bottom:8px">🗂️</div><div style="font-weight:700;color:var(--amber);font-size:14px">Styles</div><div style="font-size:12px;color:var(--gray500);margin-top:3px">5 conflict management styles</div></div>
         <div class="home-card" onclick="showSectionByName('playbook')" style="border-color:#0891B230"><div style="font-size:26px;margin-bottom:8px">📋</div><div style="font-weight:700;color:var(--cyan);font-size:14px">Playbook</div><div style="font-size:12px;color:var(--gray500);margin-top:3px">Quick reference guide</div></div>
         <div class="home-card" onclick="showSectionByName('quiz')" style="border-color:#7C3AED30"><div style="font-size:26px;margin-bottom:8px">🧠</div><div style="font-weight:700;color:var(--violet);font-size:14px">Quiz</div><div style="font-size:12px;color:var(--gray500);margin-top:3px">8-question self-assessment</div></div>
@@ -250,22 +295,39 @@ h2.sec-title{color:var(--navy);font-size:18px;margin-bottom:4px}
 
     <!-- SKILLS -->
     <div id="sec-skills" class="section">
-      <h2 class="sec-title">🔑 Core Conflict Management Skills</h2>
-      <p class="sec-sub">Tap each skill to expand. Your progress is saved automatically.</p>
+      <div class="sec-head">
+        <span class="sec-icon" data-icon="skills"></span>
+        <div>
+          <h2 class="sec-title">Core Conflict Management Skills</h2>
+          <p class="sec-sub">Tap each skill to expand. Your progress is saved automatically.</p>
+        </div>
+        <span class="sec-count" id="skills-count"></span>
+      </div>
       <div id="skills-container"></div>
     </div>
 
     <!-- SCENARIOS -->
     <div id="sec-scenarios" class="section">
-      <h2 class="sec-title">🎭 Practice Scenarios</h2>
-      <p class="sec-sub">Select the best response for each situation.</p>
+      <div class="sec-head">
+        <span class="sec-icon" data-icon="scenarios"></span>
+        <div>
+          <h2 class="sec-title">Practice Scenarios</h2>
+          <p class="sec-sub">Select the best response for each situation.</p>
+        </div>
+        <span class="sec-count" id="scen-count"></span>
+      </div>
       <div id="scenarios-container"></div>
     </div>
 
     <!-- STYLES -->
     <div id="sec-styles" class="section">
-      <h2 class="sec-title">🗂️ The Five Conflict Management Styles</h2>
-      <p class="sec-sub">Effective leaders know when to use each style depending on the situation.</p>
+      <div class="sec-head">
+        <span class="sec-icon" data-icon="styles"></span>
+        <div>
+          <h2 class="sec-title">The Five Conflict Management Styles</h2>
+          <p class="sec-sub">Effective leaders know when to use each style depending on the situation.</p>
+        </div>
+      </div>
       <div id="styles-container"></div>
       <div style="background:var(--navy);color:#fff;border-radius:var(--radius);padding:18px;margin-top:10px">
         <div style="font-weight:700;margin-bottom:7px;font-size:15px">Key Leadership Principle</div>
@@ -275,15 +337,25 @@ h2.sec-title{color:var(--navy);font-size:18px;margin-bottom:4px}
 
     <!-- PLAYBOOK -->
     <div id="sec-playbook" class="section">
-      <h2 class="sec-title">📋 Supervisor Conflict Playbook</h2>
-      <p class="sec-sub">Your quick reference guide for every conflict situation.</p>
+      <div class="sec-head">
+        <span class="sec-icon" data-icon="playbook"></span>
+        <div>
+          <h2 class="sec-title">Supervisor Conflict Playbook</h2>
+          <p class="sec-sub">Your quick reference guide for every conflict situation.</p>
+        </div>
+      </div>
       <div id="playbook-container"></div>
     </div>
 
     <!-- QUIZ -->
     <div id="sec-quiz" class="section">
-      <h2 class="sec-title">🧠 Knowledge Check</h2>
-      <p class="sec-sub">8 questions covering core conflict management concepts. Your best score is saved.</p>
+      <div class="sec-head">
+        <span class="sec-icon" data-icon="quiz"></span>
+        <div>
+          <h2 class="sec-title">Knowledge Check</h2>
+          <p class="sec-sub">8 questions covering core conflict management concepts. Your best score is saved.</p>
+        </div>
+      </div>
       <div id="quiz-container"></div>
     </div>
 
@@ -298,6 +370,45 @@ h2.sec-title{color:var(--navy);font-size:18px;margin-bottom:4px}
 // ╚══════════════════════════════════════════════════════╝
 const SUPABASE_URL = 'https://hmshmfxpbkgrhzdnzyco.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhtc2htZnhwYmtncmh6ZG56eWNvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0MjE3MTAsImV4cCI6MjA4ODk5NzcxMH0.-atifaYNHcRBtuyS4wjwbxwzV2GnIPqkDfRXQ9I2P4Q';
+
+// ── ICONS (inline SVG registry) ───────────────────────────────────────────
+const SVG_OPEN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">';
+const ICONS = {
+  logo:      SVG_OPEN + '<path d="M12 3 19 5.8v5.4c0 4.4-2.9 8.4-7 9.8-4.1-1.4-7-5.4-7-9.8V5.8L12 3z"/><path d="m9 11.8 2.2 2.2 4.3-4.5"/></svg>',
+  home:      SVG_OPEN + '<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.8V20a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V9.8"/></svg>',
+  skills:    SVG_OPEN + '<circle cx="7.5" cy="16.5" r="4.5"/><path d="m10.7 13.3 9.3-9.3"/><path d="m15.5 5.5 3 3"/></svg>',
+  scenarios: SVG_OPEN + '<path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5c-1.6 0-3.1-.4-4.4-1.2L3 20l1.2-5.1A8.5 8.5 0 1 1 21 11.5z"/></svg>',
+  styles:    SVG_OPEN + '<path d="m12 2.5 9 5.2-9 5.2-9-5.2 9-5.2z"/><path d="m3 12.9 9 5.2 9-5.2"/></svg>',
+  playbook:  SVG_OPEN + '<path d="M2 4.5h6.5A3.5 3.5 0 0 1 12 8v13a3 3 0 0 0-3-3H2z"/><path d="M22 4.5h-6.5A3.5 3.5 0 0 0 12 8v13a3 3 0 0 1 3-3h7z"/></svg>',
+  quiz:      SVG_OPEN + '<rect x="8" y="2.5" width="8" height="4" rx="1.2"/><path d="M16 4.5h2.5A1.5 1.5 0 0 1 20 6v14a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 20V6a1.5 1.5 0 0 1 1.5-1.5H8"/><path d="m9 13.5 2 2 4-4.5"/></svg>',
+  check:     SVG_OPEN + '<path d="M20 6 9 17l-5-5"/></svg>',
+  x:         SVG_OPEN + '<path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>',
+  chevron:   SVG_OPEN + '<path d="m6 9 6 6 6-6"/></svg>',
+  reset:     SVG_OPEN + '<path d="M3 12a9 9 0 1 0 2.6-6.4L3 8"/><path d="M3 3v5h5"/></svg>',
+  arrowRight:SVG_OPEN + '<path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>',
+  target:    SVG_OPEN + '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1"/></svg>',
+  sparkle:   SVG_OPEN + '<path d="M12 3.5 13.8 9.2 19.5 11l-5.7 1.8L12 18.5l-1.8-5.7L4.5 11l5.7-1.8L12 3.5z"/></svg>',
+  alert:     SVG_OPEN + '<circle cx="12" cy="12" r="9"/><path d="M12 8v4.5"/><path d="M12 16h.01"/></svg>',
+};
+function icon(name, cls = '') { return `<span class="icon${cls ? ' ' + cls : ''}">${ICONS[name]}</span>`; }
+function decorateIcons() {
+  document.querySelectorAll('[data-icon]').forEach(el => { el.innerHTML = ICONS[el.dataset.icon] || ''; });
+}
+decorateIcons();
+
+// ── NAV ───────────────────────────────────────────────────────────────────
+const NAV = [
+  { id:'home',      label:'Home',      icon:'home' },
+  { id:'skills',    label:'Skills',    icon:'skills' },
+  { id:'scenarios', label:'Scenarios', icon:'scenarios' },
+  { id:'styles',    label:'Styles',    icon:'styles' },
+  { id:'playbook',  label:'Playbook',  icon:'playbook' },
+  { id:'quiz',      label:'Quiz',      icon:'quiz' },
+];
+function buildNav() {
+  document.getElementById('nav').innerHTML = NAV.map(n =>
+    `<button class="nav-pill${n.id==='home'?' active':''}" data-target="${n.id}" onclick="showSectionByName('${n.id}')">${icon(n.icon)}<span>${n.label}</span></button>`).join('');
+}
 
 // ── Supabase client (loaded via CDN) ──────────────────────────────────────
 let supabase;
@@ -372,7 +483,10 @@ async function doLogout() {
 async function onSignedIn(user) {
   currentUser = user;
   const name = user.user_metadata?.full_name || user.email.split('@')[0];
-  document.getElementById('user-name-chip').textContent = name;
+  const avatar = document.getElementById('user-avatar');
+  avatar.textContent = name.split(/\s+/).map(w => w[0]).slice(0, 2).join('').toUpperCase();
+  avatar.title = name;
+  buildNav();
 
   // Load or create progress row
   const { data } = await supabase
@@ -420,11 +534,13 @@ async function saveProgress() {
 
 // ── PROGRESS STRIP ─────────────────────────────────────────────────────────
 function renderProgressStrip() {
+  const strip = document.getElementById('progress-strip');
+  if (!strip) return; // strip removed; replaced by dashboard in Task 2
   const scenDone  = Object.keys(userProgress.scenarios_answered).length;
   const quiz      = userProgress.quiz_best_score;
   const skillsDone = Math.min(userProgress.skills_opened.length, 7);
-  document.getElementById('progress-strip').innerHTML = `
-    <div class="prog-item"><div class="prog-dot ${scenDone===5?'done':''}"></div>Scenarios: ${scenDone}/5</div>
+  strip.innerHTML = `
+    <div class="prog-item"><div class="prog-dot ${scenDone===6?'done':''}"></div>Scenarios: ${scenDone}/6</div>
     <div class="prog-item"><div class="prog-dot ${quiz!==null?'done':''}"></div>Quiz: ${quiz!==null?quiz+'/8 best':'Not attempted'}</div>
     <div class="prog-item"><div class="prog-dot ${skillsDone>=7?'done':''}"></div>Skills reviewed: ${skillsDone}/7</div>
   `;
@@ -455,18 +571,9 @@ function setAuthLoading(id, loading) {
   btn.textContent = loading ? 'Please wait…' : (id==='btn-login' ? 'Sign In' : 'Create Account');
 }
 
-function showSection(id, btn) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('sec-'+id).classList.add('active');
-  if (btn) btn.classList.add('active');
-  window.scrollTo({ top:0, behavior:'smooth' });
-}
-
 function showSectionByName(id) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => { b.classList.remove('active'); if(b.textContent.toLowerCase().includes(id)) b.classList.add('active'); });
-  document.getElementById('sec-'+id).classList.add('active');
+  document.querySelectorAll('.section').forEach(s => s.classList.toggle('active', s.id === 'sec-'+id));
+  document.querySelectorAll('.nav-pill').forEach(b => b.classList.toggle('active', b.dataset.target === id));
   window.scrollTo({ top:0, behavior:'smooth' });
 }
 
@@ -591,6 +698,13 @@ const scenarios = [
       {text:"Apologize and ease up on feedback for a while.",correct:false,feedback:"Pulling back on legitimate feedback is unfair to quality standards and the rest of the team."},
       {text:"Listen fully, validate the feeling, and then walk through how and why feedback is applied — offer consistency as a standard.",correct:true,feedback:"Correct. Acknowledge the perception, explain your feedback process, and reinforce that it's standard-based — not personal."},
       {text:"Start giving everyone more feedback to make it seem equal.",correct:false,feedback:"Artificially increasing feedback elsewhere introduces confusion and dilutes meaningful correction."}
+    ]},
+  { id:6, title:"Employee Arriving Late Repeatedly", setup:"A team member has shown up 15–20 minutes late three times this week. No explanation has been given and it is starting to affect team readiness at the start of shifts.",
+    options:[
+      {text:"Send a group reminder to the whole team about the expected start time.",correct:false,feedback:"Group messages avoid direct accountability. The issue is with one person — address it privately and directly."},
+      {text:"Wait to see if it corrects itself before saying anything.",correct:false,feedback:"Silence signals that lateness is acceptable. Patterns left unaddressed become harder to correct later."},
+      {text:"Have a private conversation: name the pattern, ask if something is going on, and clarify the expectation going forward.",correct:true,feedback:"Correct. Naming the pattern (not a single incident) opens a real conversation. Asking first leaves room for a legitimate reason — then you set a clear expectation either way."},
+      {text:"Issue a formal written warning immediately to make clear this is serious.",correct:false,feedback:"Skipping the direct conversation creates a grievance risk and misses the chance to resolve it at the lowest level. Start with a private conversation and document from there if needed."}
     ]}
 ];
 
