@@ -171,6 +171,46 @@ input{font-family:inherit}
 .acc[data-open] .acc-body{grid-template-rows:1fr}
 .acc[data-open] .acc-body-in{padding-bottom:22px}
 
+/* CONTENT COMPONENTS */
+.content-h{font-weight:650;color:var(--t1);font-size:14.5px;margin:18px 0 10px}
+.acc-body-in > .content-h:first-child,.acc-body-in > .list:first-child,.acc-body-in > .compare:first-child,.acc-body-in > .step:first-child,.acc-body-in > .two-col:first-child,.acc-body-in > .gap-grid:first-child{margin-top:16px}
+.list{list-style:none;font-size:14.5px;line-height:1.6}
+.list li{position:relative;padding-left:18px;margin-bottom:9px}
+.list li::before{content:'';position:absolute;left:2px;top:.62em;width:6px;height:6px;border-radius:50%;background:var(--t4)}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+@media(max-width:560px){.compare{grid-template-columns:1fr}}
+.cmp-no,.cmp-yes{border-radius:var(--r-sm);padding:12px 14px;font-size:14px;line-height:1.55;border:1px solid}
+.cmp-no{background:var(--red-bg);border-color:var(--red-line)}
+.cmp-yes{background:var(--green-bg);border-color:var(--green-line)}
+.cmp-tag{display:block;font-size:10.5px;font-weight:750;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px}
+.cmp-no .cmp-tag{color:var(--red)}
+.cmp-yes .cmp-tag{color:var(--green)}
+.ask-box{background:rgba(79,70,229,.06);border-radius:var(--r-sm);padding:16px;margin-top:16px}
+.ask-label{font-size:11px;font-weight:750;letter-spacing:.08em;text-transform:uppercase;color:var(--t3);margin-bottom:10px}
+.ask-box .compare{margin-bottom:0}
+.tip{display:flex;gap:9px;align-items:flex-start;font-size:13.5px;font-weight:600;margin-top:12px;padding:12px 14px;border-radius:var(--r-sm)}
+.tip .icon{margin-top:1px}
+.tip .icon svg{width:16px;height:16px}
+.step{display:flex;gap:14px;margin-bottom:18px;align-items:flex-start}
+.step:last-child{margin-bottom:4px}
+.step-n{width:34px;height:34px;border-radius:11px;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0}
+.step-t{font-weight:700;font-size:14.5px}
+.step-d{font-size:13.5px;color:var(--t3);margin-top:2px;line-height:1.55}
+.step-q{font-size:14.5px;font-style:italic;color:var(--t2);margin-top:7px}
+.phrase{border-radius:var(--r-sm);padding:12px 15px;margin-bottom:8px;font-size:14.5px;font-style:italic;font-weight:550}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:560px){.two-col{grid-template-columns:1fr}}
+.col-h{font-weight:700;font-size:13.5px;margin-bottom:10px}
+.callout{border-radius:var(--r-sm);padding:16px;margin-top:16px;text-align:center}
+.callout-main{font-style:italic;font-size:15.5px;font-weight:650}
+.callout-note{font-size:13px;color:var(--t3);margin-top:6px}
+.gap-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:560px){.gap-grid{grid-template-columns:1fr}}
+.gap-cell{border-radius:var(--r-sm);padding:15px;text-align:center;border:1px solid}
+.gap-see{font-size:12.5px;color:var(--t3)}
+.gap-name{font-weight:700;font-size:15px;color:var(--t1);margin:4px 0}
+.gap-act{font-weight:750;font-size:14px}
+
 /* BUTTONS */
 .btn-primary{background:var(--grad);color:#fff;border:none;border-radius:var(--r-sm);padding:12px 22px;font-weight:700;font-size:14px;transition:filter .15s,transform .1s;box-shadow:0 4px 12px rgba(79,70,229,.25);display:inline-flex;align-items:center;gap:8px}
 .btn-primary:hover{filter:brightness(1.08)}
@@ -663,6 +703,14 @@ function showSectionByName(id) {
 }
 
 function toggleCard(id, skillId) {
+  const acc = document.getElementById(id + '-acc');
+  if (acc) {
+    const open = acc.toggleAttribute('data-open');
+    acc.querySelector('.acc-head').setAttribute('aria-expanded', open);
+    if (open && skillId) trackSkill(skillId);
+    return;
+  }
+  // legacy fallback (styles section until Task 4)
   const body  = document.getElementById(id);
   const arrow = document.getElementById(id+'-arrow');
   const open  = body.classList.toggle('open');
@@ -673,6 +721,8 @@ function toggleCard(id, skillId) {
 function trackSkill(id) {
   if (!userProgress.skills_opened.includes(id)) {
     userProgress.skills_opened.push(id);
+    const acc = document.getElementById(id + '-acc');
+    if (acc) acc.setAttribute('data-done', '');
     saveProgress(); refreshHome();
   }
 }
@@ -696,56 +746,65 @@ function friendlyError(msg) {
 // ══════════════════════════════════════════════════════
 
 const skillsData = [
-  { id:'s1', icon:'🔍', color:'#4F46E5', bg:'#EEF2FF', title:'1. Early Conflict Detection', sub:'Spot signals before they become arguments',
-    content:`<div style="font-weight:600;margin:12px 0 8px;font-size:15px">Early Warning Signals:</div>
-    <div style="font-size:15px;line-height:2.4">• Defensive tone in messages or brief replies<br>• Silence or sudden withdrawal from team communication<br>• Repeated minor mistakes from a normally strong performer<br>• Passive resistance — "okay…" but no follow-through<br>• Team members bypassing the supervisor entirely</div>
-    <div style="background:#EEF2FF;border-radius:8px;padding:14px;margin-top:14px">
-      <div style="font-size:12px;font-weight:600;color:#6B7280;margin-bottom:8px">ASK THIS INSTEAD:</div>
-      <div class="g2">
-        <div style="background:#FEE2E2;border-radius:6px;padding:12px"><div style="font-size:11px;color:#DC2626;font-weight:600">❌ NOT THIS</div><div style="font-size:15px;margin-top:5px">What's the problem?</div></div>
-        <div style="background:#DCFCE7;border-radius:6px;padding:12px"><div style="font-size:11px;color:#059669;font-weight:600">✅ THIS</div><div style="font-size:15px;margin-top:5px">What changed recently?</div></div>
+  { id:'s1', color:'#4F46E5', title:'Early Conflict Detection', sub:'Spot signals before they become arguments',
+    content:`<h4 class="content-h">Early Warning Signals:</h4>
+    <ul class="list">
+      <li>Defensive tone in messages or brief replies</li>
+      <li>Silence or sudden withdrawal from team communication</li>
+      <li>Repeated minor mistakes from a normally strong performer</li>
+      <li>Passive resistance — "okay…" but no follow-through</li>
+      <li>Team members bypassing the supervisor entirely</li>
+    </ul>
+    <div class="ask-box">
+      <div class="ask-label">Ask this instead</div>
+      <div class="compare">
+        <div class="cmp-no"><span class="cmp-tag">Not this</span>What's the problem?</div>
+        <div class="cmp-yes"><span class="cmp-tag">This</span>What changed recently?</div>
       </div>
     </div>`},
-  { id:'s2', icon:'⚖️', color:'#7C3AED', bg:'#F5F3FF', title:'2. Neutral Framing', sub:'Separate the person from the behavior',
-    content:`<div style="font-weight:600;margin:12px 0 10px;font-size:15px">Reframe the Language:</div>
-    <div class="compare-row"><div class="cmp" style="background:#FEE2E2"><div class="cmp-label" style="color:#DC2626">❌ AVOID</div><div class="cmp-text">You're not careful with coding.</div></div><div class="cmp" style="background:#DCFCE7"><div class="cmp-label" style="color:#059669">✅ SAY THIS</div><div class="cmp-text">I noticed 4 documents coded differently than protocol.</div></div></div>
-    <div class="compare-row"><div class="cmp" style="background:#FEE2E2"><div class="cmp-label" style="color:#DC2626">❌ AVOID</div><div class="cmp-text">You're always late.</div></div><div class="cmp" style="background:#DCFCE7"><div class="cmp-label" style="color:#059669">✅ SAY THIS</div><div class="cmp-text">The last two batches were submitted after deadline.</div></div></div>
-    <div class="compare-row"><div class="cmp" style="background:#FEE2E2"><div class="cmp-label" style="color:#DC2626">❌ AVOID</div><div class="cmp-text">You're not a team player.</div></div><div class="cmp" style="background:#DCFCE7"><div class="cmp-label" style="color:#059669">✅ SAY THIS</div><div class="cmp-text">I've noticed you haven't responded to two team requests this week.</div></div></div>
-    <div style="font-size:14px;color:#7C3AED;font-weight:600;margin-top:10px;padding:10px 14px;background:#F5F3FF;border-radius:6px">💡 Lead with facts, patterns, and impact — never assumptions.</div>`},
-  { id:'s3', icon:'💬', color:'#0891B2', bg:'#ECFEFF', title:'3. 3-Step Conflict Conversation', sub:'Turn conflict into collaborative problem-solving',
-    content:`<div style="margin-top:12px">
-    <div class="step-row"><div class="step-num" style="background:#0891B2">1</div><div><div style="font-weight:700;color:#0891B2;font-size:15px">Observe — Facts Only</div><div style="font-size:14px;color:#6B7280;margin-top:2px">State only what you have observed.</div><div style="font-size:15px;font-style:italic;margin-top:6px">"Here's what I'm seeing…"</div></div></div>
-    <div class="step-row"><div class="step-num" style="background:#0891B2">2</div><div><div style="font-weight:700;color:#0891B2;font-size:15px">Impact — Why It Matters</div><div style="font-size:14px;color:#6B7280;margin-top:2px">Explain the effect on QC, rework, or confidence.</div><div style="font-size:15px;font-style:italic;margin-top:6px">"This affects QC, rework time, and client confidence."</div></div></div>
-    <div class="step-row"><div class="step-num" style="background:#0891B2">3</div><div><div style="font-weight:700;color:#0891B2;font-size:15px">Collaborate — Build Ownership</div><div style="font-size:14px;color:#6B7280;margin-top:2px">Invite them into the solution.</div><div style="font-size:15px;font-style:italic;margin-top:6px">"How do we prevent this going forward?"</div></div></div>
-    </div>`},
-  { id:'s4', icon:'👂', color:'#059669', bg:'#ECFDF5', title:'4. Listen Without Fixing Too Fast', sub:'Pause before jumping to solutions',
-    content:`<div class="g2" style="margin-top:12px">
-    <div><div style="font-weight:600;color:#DC2626;margin-bottom:10px;font-size:14px">❌ Common Mistakes</div><div style="font-size:14px;line-height:2.4">• Interrupting to correct mid-sentence<br>• Immediately defending the process<br>• Jumping to solutions before understanding</div></div>
-    <div><div style="font-weight:600;color:#059669;margin-bottom:10px;font-size:14px">✅ Better Approach</div><div style="font-size:14px;line-height:2.4">• Let them finish speaking fully<br>• Repeat back what you heard<br>• Confirm understanding before responding</div></div>
+  { id:'s2', color:'#7C3AED', title:'Neutral Framing', sub:'Separate the person from the behavior',
+    content:`<h4 class="content-h">Reframe the Language:</h4>
+    <div class="compare"><div class="cmp-no"><span class="cmp-tag">Avoid</span>You're not careful with coding.</div><div class="cmp-yes"><span class="cmp-tag">Say this</span>I noticed 4 documents coded differently than protocol.</div></div>
+    <div class="compare"><div class="cmp-no"><span class="cmp-tag">Avoid</span>You're always late.</div><div class="cmp-yes"><span class="cmp-tag">Say this</span>The last two batches were submitted after deadline.</div></div>
+    <div class="compare"><div class="cmp-no"><span class="cmp-tag">Avoid</span>You're not a team player.</div><div class="cmp-yes"><span class="cmp-tag">Say this</span>I've noticed you haven't responded to two team requests this week.</div></div>
+    <div class="tip" style="background:rgba(124,58,237,.07);color:#7C3AED">${icon('sparkle')}<span>Lead with facts, patterns, and impact — never assumptions.</span></div>`},
+  { id:'s3', color:'#0891B2', title:'3-Step Conflict Conversation', sub:'Turn conflict into collaborative problem-solving',
+    content:`<div class="step"><div class="step-n" style="background:#0891B2">1</div><div><div class="step-t" style="color:#0891B2">Observe — Facts Only</div><div class="step-d">State only what you have observed.</div><div class="step-q">"Here's what I'm seeing…"</div></div></div>
+    <div class="step"><div class="step-n" style="background:#0891B2">2</div><div><div class="step-t" style="color:#0891B2">Impact — Why It Matters</div><div class="step-d">Explain the effect on QC, rework, or confidence.</div><div class="step-q">"This affects QC, rework time, and client confidence."</div></div></div>
+    <div class="step"><div class="step-n" style="background:#0891B2">3</div><div><div class="step-t" style="color:#0891B2">Collaborate — Build Ownership</div><div class="step-d">Invite them into the solution.</div><div class="step-q">"How do we prevent this going forward?"</div></div></div>`},
+  { id:'s4', color:'#059669', title:'Listen Without Fixing Too Fast', sub:'Pause before jumping to solutions',
+    content:`<div class="two-col">
+    <div><div class="col-h" style="color:var(--red)">Common Mistakes</div><ul class="list"><li>Interrupting to correct mid-sentence</li><li>Immediately defending the process</li><li>Jumping to solutions before understanding</li></ul></div>
+    <div><div class="col-h" style="color:var(--green)">Better Approach</div><ul class="list"><li>Let them finish speaking fully</li><li>Repeat back what you heard</li><li>Confirm understanding before responding</li></ul></div>
     </div>
-    <div style="background:#ECFDF5;border-radius:8px;padding:14px;margin-top:14px;text-align:center">
-      <div style="font-style:italic;font-size:16px;color:#059669;font-weight:600">"Let me make sure I understand you correctly…"</div>
-      <div style="font-size:13px;color:#6B7280;margin-top:6px">This phrase alone de-escalates ~70% of tension.</div>
+    <div class="callout" style="background:var(--green-bg)">
+      <div class="callout-main" style="color:#059669">"Let me make sure I understand you correctly…"</div>
+      <div class="callout-note">This phrase alone de-escalates ~70% of tension.</div>
     </div>`},
-  { id:'s5', icon:'🛡️', color:'#D97706', bg:'#FFFBEB', title:'5. Setting Clear Boundaries', sub:'Calm and firm — boundaries protect standards, not control',
-    content:`<div style="font-weight:600;margin:12px 0 10px;font-size:15px">Reframe the Language:</div>
-    <div class="compare-row"><div class="cmp" style="background:#FEE2E2"><div class="cmp-label" style="color:#DC2626">❌ AVOID</div><div class="cmp-text">This is non-negotiable, just do it.</div></div><div class="cmp" style="background:#DCFCE7"><div class="cmp-label" style="color:#059669">✅ SAY THIS</div><div class="cmp-text">This is the standard we have to meet for QC.</div></div></div>
-    <div class="compare-row"><div class="cmp" style="background:#FEE2E2"><div class="cmp-label" style="color:#DC2626">❌ AVOID</div><div class="cmp-text">If you don't like it…</div></div><div class="cmp" style="background:#DCFCE7"><div class="cmp-label" style="color:#059669">✅ SAY THIS</div><div class="cmp-text">Here's what success looks like going forward.</div></div></div>
-    <div class="compare-row"><div class="cmp" style="background:#FEE2E2"><div class="cmp-label" style="color:#DC2626">❌ AVOID</div><div class="cmp-text">You have to follow my decision.</div></div><div class="cmp" style="background:#DCFCE7"><div class="cmp-label" style="color:#059669">✅ SAY THIS</div><div class="cmp-text">The protocol exists to protect quality for the client.</div></div></div>`},
-  { id:'s6', icon:'🧭', color:'#DC2626', bg:'#FEF2F2', title:'6. Coach vs. Correct', sub:'Diagnose the gap before you respond',
-    content:`<div class="g2" style="margin-top:12px">
-    <div style="background:#05996910;border:1px solid #05996930;border-radius:8px;padding:14px;text-align:center"><div style="font-size:13px;color:#6B7280">You see a…</div><div style="font-weight:700;font-size:15px;margin:4px 0">Skill gap</div><div style="color:#059669;font-weight:700">→ Coach</div></div>
-    <div style="background:#0891B210;border:1px solid #0891B230;border-radius:8px;padding:14px;text-align:center"><div style="font-size:13px;color:#6B7280">You see a…</div><div style="font-weight:700;font-size:15px;margin:4px 0">Clarity gap</div><div style="color:#0891B2;font-weight:700">→ Clarify</div></div>
-    <div style="background:#D9770610;border:1px solid #D9770630;border-radius:8px;padding:14px;text-align:center"><div style="font-size:13px;color:#6B7280">You see a…</div><div style="font-weight:700;font-size:15px;margin:4px 0">Behavior gap</div><div style="color:#D97706;font-weight:700">→ Correct</div></div>
-    <div style="background:#DC262610;border:1px solid #DC262630;border-radius:8px;padding:14px;text-align:center"><div style="font-size:13px;color:#6B7280">You see a…</div><div style="font-weight:700;font-size:15px;margin:4px 0">Recurring pattern</div><div style="color:#DC2626;font-weight:700">→ Escalate</div></div>
+  { id:'s5', color:'#B45309', title:'Setting Clear Boundaries', sub:'Calm and firm — boundaries protect standards, not control',
+    content:`<h4 class="content-h">Reframe the Language:</h4>
+    <div class="compare"><div class="cmp-no"><span class="cmp-tag">Avoid</span>This is non-negotiable, just do it.</div><div class="cmp-yes"><span class="cmp-tag">Say this</span>This is the standard we have to meet for QC.</div></div>
+    <div class="compare"><div class="cmp-no"><span class="cmp-tag">Avoid</span>If you don't like it…</div><div class="cmp-yes"><span class="cmp-tag">Say this</span>Here's what success looks like going forward.</div></div>
+    <div class="compare"><div class="cmp-no"><span class="cmp-tag">Avoid</span>You have to follow my decision.</div><div class="cmp-yes"><span class="cmp-tag">Say this</span>The protocol exists to protect quality for the client.</div></div>`},
+  { id:'s6', color:'#DC2626', title:'Coach vs. Correct', sub:'Diagnose the gap before you respond',
+    content:`<div class="gap-grid">
+    <div class="gap-cell" style="background:#05966908;border-color:#05966930"><div class="gap-see">You see a…</div><div class="gap-name">Skill gap</div><div class="gap-act" style="color:#059669">→ Coach</div></div>
+    <div class="gap-cell" style="background:#0891B208;border-color:#0891B230"><div class="gap-see">You see a…</div><div class="gap-name">Clarity gap</div><div class="gap-act" style="color:#0891B2">→ Clarify</div></div>
+    <div class="gap-cell" style="background:#D9770608;border-color:#D9770630"><div class="gap-see">You see a…</div><div class="gap-name">Behavior gap</div><div class="gap-act" style="color:#B45309">→ Correct</div></div>
+    <div class="gap-cell" style="background:#DC262608;border-color:#DC262630"><div class="gap-see">You see a…</div><div class="gap-name">Recurring pattern</div><div class="gap-act" style="color:#DC2626">→ Escalate</div></div>
     </div>`},
-  { id:'s7', icon:'🌡️', color:'#7C3AED', bg:'#F5F3FF', title:'7. De-escalating High Emotions', sub:'Do not match their energy — slow everything down',
-    content:`<div style="font-weight:600;margin:12px 0 8px;font-size:15px">Rules:</div>
-    <div style="font-size:15px;line-height:2.4">→ Slow the conversation deliberately<br>→ Lower your voice — never raise it<br>→ Do not mirror high emotional energy<br>→ Pause the conversation if needed</div>
-    <div style="margin-top:14px"><div style="font-weight:600;margin-bottom:10px;font-size:15px">Phrases that work:</div>
-    <div style="background:#F5F3FF;border-radius:6px;padding:10px 14px;margin-bottom:8px;font-size:15px;font-style:italic;color:#7C3AED">"Let's pause for a moment."</div>
-    <div style="background:#F5F3FF;border-radius:6px;padding:10px 14px;margin-bottom:8px;font-size:15px;font-style:italic;color:#7C3AED">"I want us to solve this, not win an argument."</div>
-    <div style="background:#F5F3FF;border-radius:6px;padding:10px 14px;font-size:15px;font-style:italic;color:#7C3AED">"We can continue once emotions are lower."</div></div>`},
+  { id:'s7', color:'#7C3AED', title:'De-escalating High Emotions', sub:'Do not match their energy — slow everything down',
+    content:`<h4 class="content-h">Rules:</h4>
+    <ul class="list">
+      <li>Slow the conversation deliberately</li>
+      <li>Lower your voice — never raise it</li>
+      <li>Do not mirror high emotional energy</li>
+      <li>Pause the conversation if needed</li>
+    </ul>
+    <h4 class="content-h">Phrases that work:</h4>
+    <div class="phrase" style="background:rgba(124,58,237,.07);color:#7C3AED">"Let's pause for a moment."</div>
+    <div class="phrase" style="background:rgba(124,58,237,.07);color:#7C3AED">"I want us to solve this, not win an argument."</div>
+    <div class="phrase" style="background:rgba(124,58,237,.07);color:#7C3AED">"We can continue once emotions are lower."</div>`},
 ];
 
 const scenarios = [
@@ -836,16 +895,14 @@ function buildAll() {
 }
 
 function buildSkills() {
-  document.getElementById('skills-container').innerHTML = skillsData.map(s=>`
-    <div class="card-collapsible">
-      <button class="card-header" onclick="toggleCard('${s.id}','${s.id}')">
-        <div style="display:flex;align-items:center;gap:12px">
-          <span style="font-size:26px">${s.icon}</span>
-          <div><div style="font-weight:700;color:${s.color};font-size:16px">${s.title}</div><div style="font-size:13px;color:#6B7280;margin-top:2px">${s.sub}</div></div>
-        </div>
-        <span id="${s.id}-arrow" class="arrow">▼</span>
+  document.getElementById('skills-container').innerHTML = skillsData.map((s, i) => `
+    <div class="acc" id="${s.id}-acc"${userProgress.skills_opened.includes(s.id) ? ' data-done' : ''}>
+      <button class="acc-head" aria-expanded="false" onclick="toggleCard('${s.id}','${s.id}')">
+        <span class="acc-num" style="background:${s.color}14;color:${s.color}">${String(i+1).padStart(2,'0')}</span>
+        <span class="acc-txt"><span class="acc-title">${s.title}</span><span class="acc-sub">${s.sub}</span></span>
+        <span class="acc-meta">${icon('check','acc-check')}${icon('chevron','chev')}</span>
       </button>
-      <div id="${s.id}" class="card-body" style="border-color:${s.bg}">${s.content}</div>
+      <div class="acc-body"><div class="acc-body-in" id="${s.id}">${s.content}</div></div>
     </div>`).join('');
 }
 
