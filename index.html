@@ -35,10 +35,6 @@
   --sh-md:0 2px 6px rgba(11,21,38,.06),0 8px 24px rgba(11,21,38,.07);
   --sh-lg:0 4px 12px rgba(11,21,38,.10),0 24px 56px rgba(11,21,38,.14);
   --ease:cubic-bezier(.4,0,.2,1);
-  /* legacy aliases — removed in final sweep */
-  --gray50:var(--s1);--gray100:var(--s2);--gray200:var(--line);
-  --gray400:var(--t4);--gray500:var(--t3);--gray700:var(--t2);
-  --radius:var(--r-md);--shadow:var(--sh-sm);
 }
 html{font-size:16px;scroll-behavior:smooth}
 body{font-family:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--s1);color:var(--t2);min-height:100vh;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
@@ -301,12 +297,16 @@ input{font-family:inherit}
 .load-text{font-size:13px;color:rgba(255,255,255,.6);font-weight:500}
 
 @media print{
-  .topbar,#auth-screen,#loading-screen,.btn-sm,.btn-primary,.btn-outline,.btn-signout{display:none!important}
+  .topbar,#auth-screen,#loading-screen,.btn-sm,.btn-primary,.btn-outline,.btn-signout,#toast{display:none!important}
   .section{display:block!important}
-  .card-body{display:block!important}
   .acc-body{grid-template-rows:1fr!important}
+  .acc[data-open] .acc-body-in,.acc-body-in{padding-bottom:22px}
+  .hero{background:#fff;color:#000;box-shadow:none;border:1px solid #ddd}
+  .hero::before{display:none}
+  .hero-sub,.hero-eyebrow{color:#444}
+  .stat-chip{color:#333;border-color:#ccc;background:#fff}
   body{background:#fff}
-  .card,.card-collapsible,.acc{box-shadow:none;border:1px solid #ddd}
+  .card,.acc,.mod-card{box-shadow:none;border:1px solid #ddd}
 }
 </style>
 </head>
@@ -759,17 +759,8 @@ function showSectionByName(id) {
 
 function toggleCard(id, skillId) {
   const acc = document.getElementById(id + '-acc');
-  if (acc) {
-    const open = acc.toggleAttribute('data-open');
-    acc.querySelector('.acc-head').setAttribute('aria-expanded', open);
-    if (open && skillId) trackSkill(skillId);
-    return;
-  }
-  // legacy fallback (styles section until Task 4)
-  const body  = document.getElementById(id);
-  const arrow = document.getElementById(id+'-arrow');
-  const open  = body.classList.toggle('open');
-  if (arrow) arrow.classList.toggle('open', open);
+  const open = acc.toggleAttribute('data-open');
+  acc.querySelector('.acc-head').setAttribute('aria-expanded', open);
   if (open && skillId) trackSkill(skillId);
 }
 
