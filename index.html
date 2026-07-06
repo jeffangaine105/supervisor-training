@@ -252,6 +252,33 @@ input{font-family:inherit}
 .pb-row{border-radius:var(--r-sm);padding:11px 14px;margin-bottom:8px;font-size:14.5px;display:flex;gap:12px;align-items:baseline;line-height:1.55}
 .pb-n{font-weight:800;min-width:18px}
 
+/* QUIZ */
+.q-meta{display:flex;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;font-size:13.5px}
+.q-step{color:var(--t3);font-weight:600}
+.q-score{color:var(--indigo);font-weight:700}
+.q-bar{background:var(--s2);height:8px;border-radius:99px;margin-bottom:22px;overflow:hidden}
+.q-fill{background:var(--grad);height:100%;border-radius:99px;transition:width .4s var(--ease)}
+.q-text{font-weight:700;color:var(--t1);font-size:16.5px;margin-bottom:18px;line-height:1.55;letter-spacing:-.01em}
+.q-next{margin-top:18px;text-align:right}
+.dial{width:132px;height:132px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:6px auto 18px}
+.dial-in{width:104px;height:104px;border-radius:50%;background:var(--s0);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.dial-score{font-size:27px;font-weight:800;color:var(--t1);letter-spacing:-.02em}
+.dial-label{font-size:11.5px;color:var(--t3);font-weight:600;margin-top:2px}
+.result-msg{font-size:14.5px;color:var(--t2);line-height:1.65;max-width:460px;margin:0 auto 14px}
+.result-best{font-size:13px;color:var(--t3);font-weight:600;margin-bottom:20px}
+.perfect{background:var(--green-bg);border:1px solid var(--green-line);color:#065F46;border-radius:var(--r-sm);padding:14px 16px;margin:20px 0;font-weight:650;font-size:14px}
+.rev-wrap{text-align:left;margin:24px 0 10px}
+.rev-h{font-weight:700;color:var(--t1);font-size:15px;margin-bottom:12px}
+.rev-item{border:1px solid var(--line);border-radius:var(--r-sm);padding:16px;margin-bottom:10px}
+.rev-q{font-weight:650;color:var(--t1);font-size:14.5px;line-height:1.5;margin-bottom:4px}
+.rev-a{font-size:13.5px;padding:10px 13px;border-radius:8px;margin-top:8px;line-height:1.5}
+.rev-a span{font-weight:750;letter-spacing:.05em;text-transform:uppercase;font-size:10.5px;display:block;margin-bottom:3px}
+.rev-yours{background:var(--red-bg);color:#7F1D1D}
+.rev-yours span{color:var(--red)}
+.rev-correct{background:var(--green-bg);color:#065F46}
+.rev-correct span{color:var(--green)}
+.q-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:8px}
+
 /* BUTTONS */
 .btn-primary{background:var(--grad);color:#fff;border:none;border-radius:var(--r-sm);padding:12px 22px;font-weight:700;font-size:14px;transition:filter .15s,transform .1s;box-shadow:0 4px 12px rgba(79,70,229,.25);display:inline-flex;align-items:center;gap:8px}
 .btn-primary:hover{filter:brightness(1.08)}
@@ -272,18 +299,6 @@ input{font-family:inherit}
 .load-mark svg{width:30px;height:30px}
 @keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.9);opacity:.7}}
 .load-text{font-size:13px;color:rgba(255,255,255,.6);font-weight:500}
-
-/* ═══ LEGACY (replaced task-by-task, removed in final sweep) ═══ */
-.q-bar{background:var(--gray100);height:7px;border-radius:4px;margin-bottom:22px;overflow:hidden}
-.q-fill{background:var(--indigo);height:7px;border-radius:4px;transition:width .4s}
-.q-opt{width:100%;border:1.5px solid var(--gray200);border-radius:8px;padding:13px 16px;text-align:left;font-size:15px;background:#fff;display:flex;gap:10px;align-items:flex-start;margin-bottom:8px;transition:all .15s;line-height:1.5}
-.q-opt:hover:not(:disabled){background:var(--gray50)}
-.q-opt.qcorrect{background:#DCFCE7;border:2px solid var(--green);color:#065F46}
-.q-opt.qwrong{background:#FEE2E2;border:2px solid var(--red);color:#7F1D1D}
-.q-opt.qshow{background:#F0FDF4;border-color:#86EFAC}
-.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:22px}
-.result-cell{border-radius:10px;padding:18px;text-align:center}
-/* ═══ END LEGACY ═══ */
 
 @media print{
   .topbar,#auth-screen,#loading-screen,.btn-sm,.btn-primary,.btn-outline,.btn-signout{display:none!important}
@@ -320,16 +335,16 @@ input{font-family:inherit}
 
     <!-- LOGIN -->
     <div id="login-form">
-      <div class="form-group"><label>Email</label><input id="l-email" type="email" placeholder="you@example.com" autocomplete="email"/></div>
-      <div class="form-group"><label>Password</label><input id="l-pass" type="password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"/></div>
+      <div class="form-group"><label>Email</label><input id="l-email" type="email" maxlength="254" placeholder="you@example.com" autocomplete="email"/></div>
+      <div class="form-group"><label>Password</label><input id="l-pass" type="password" maxlength="72" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"/></div>
       <button class="btn-auth" id="btn-login" onclick="doLogin()">Sign In</button>
     </div>
 
     <!-- REGISTER -->
     <div id="register-form" style="display:none">
-      <div class="form-group"><label>Full Name</label><input id="r-name" type="text" placeholder="Jane Smith" autocomplete="name"/></div>
-      <div class="form-group"><label>Email</label><input id="r-email" type="email" placeholder="you@example.com" autocomplete="email"/></div>
-      <div class="form-group"><label>Password (min 6 chars)</label><input id="r-pass" type="password" placeholder="••••••••" autocomplete="new-password" onkeydown="if(event.key==='Enter')doRegister()"/></div>
+      <div class="form-group"><label>Full Name</label><input id="r-name" type="text" maxlength="80" placeholder="Jane Smith" autocomplete="name"/></div>
+      <div class="form-group"><label>Email</label><input id="r-email" type="email" maxlength="254" placeholder="you@example.com" autocomplete="email"/></div>
+      <div class="form-group"><label>Password (min 6 chars)</label><input id="r-pass" type="password" maxlength="72" placeholder="••••••••" autocomplete="new-password" onkeydown="if(event.key==='Enter')doRegister()"/></div>
       <button class="btn-auth" id="btn-register" onclick="doRegister()">Create Account</button>
     </div>
     <p class="auth-note">Your progress is saved automatically to your account.</p>
@@ -460,6 +475,7 @@ const ICONS = {
   alert:     SVG_OPEN + '<circle cx="12" cy="12" r="9"/><path d="M12 8v4.5"/><path d="M12 16h.01"/></svg>',
 };
 function icon(name, cls = '') { return `<span class="icon${cls ? ' ' + cls : ''}">${ICONS[name]}</span>`; }
+function esc(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function decorateIcons() {
   document.querySelectorAll('[data-icon]').forEach(el => { el.innerHTML = ICONS[el.dataset.icon] || ''; });
 }
@@ -515,14 +531,39 @@ let userProgress = {
 };
 
 // ── AUTH HANDLERS ─────────────────────────────────────────────────────────
+// Client-side login throttle (UX / defense-in-depth only — Supabase enforces
+// real rate limits server-side; this cannot be relied on as a security boundary).
+const LOGIN_LIMIT = { max: 5, windowMs: 15 * 60 * 1000 };
+function recentLoginFails() {
+  try {
+    const fails = JSON.parse(localStorage.getItem('login_fails') || '[]');
+    const now = Date.now();
+    const recent = fails.filter(t => now - t < LOGIN_LIMIT.windowMs);
+    localStorage.setItem('login_fails', JSON.stringify(recent));
+    return recent;
+  } catch { return []; }
+}
+function loginLockedMinutes() {
+  const recent = recentLoginFails();
+  if (recent.length < LOGIN_LIMIT.max) return 0;
+  return Math.max(1, Math.ceil((LOGIN_LIMIT.windowMs - (Date.now() - recent[0])) / 60000));
+}
+
 async function doLogin() {
   const email = document.getElementById('l-email').value.trim();
   const pass  = document.getElementById('l-pass').value;
   if (!email || !pass) { showAuthMsg('error', 'Please enter your email and password.'); return; }
+  const lockedFor = loginLockedMinutes();
+  if (lockedFor) { showAuthMsg('error', `Too many failed attempts. Please try again in ${lockedFor} minute${lockedFor===1?'':'s'}.`); return; }
   setAuthLoading('btn-login', true);
   const { error } = await supabase.auth.signInWithPassword({ email, password: pass });
   setAuthLoading('btn-login', false);
-  if (error) showAuthMsg('error', friendlyError(error.message));
+  if (error) {
+    try { localStorage.setItem('login_fails', JSON.stringify([...recentLoginFails(), Date.now()])); } catch {}
+    showAuthMsg('error', friendlyError(error.message));
+  } else {
+    try { localStorage.removeItem('login_fails'); } catch {}
+  }
 }
 
 async function doRegister() {
@@ -530,8 +571,10 @@ async function doRegister() {
   const email = document.getElementById('r-email').value.trim();
   const pass  = document.getElementById('r-pass').value;
   if (!name)  { showAuthMsg('error', 'Please enter your full name.'); return; }
-  if (!email) { showAuthMsg('error', 'Please enter your email.'); return; }
+  if (name.length > 80) { showAuthMsg('error', 'Name must be 80 characters or fewer.'); return; }
+  if (!email || email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showAuthMsg('error', 'Please enter a valid email address.'); return; }
   if (pass.length < 6) { showAuthMsg('error', 'Password must be at least 6 characters.'); return; }
+  if (pass.length > 72) { showAuthMsg('error', 'Password must be 72 characters or fewer.'); return; }
   setAuthLoading('btn-register', true);
   const { data, error } = await supabase.auth.signUp({
     email, password: pass,
@@ -638,7 +681,7 @@ function buildHome() {
   document.getElementById('home-container').innerHTML = `
     <div class="hero">
       <div class="hero-eyebrow">Conflict Management Program</div>
-      <h2>${greeting()}, ${firstName}</h2>
+      <h2>${greeting()}, ${esc(firstName)}</h2>
       <p class="hero-sub">${pct === 100 ? 'You have completed the full program. Well done.' : `You're ${pct}% through the program`}</p>
       <div class="meter"><div class="meter-fill" style="width:${pct}%"></div></div>
       <div class="hero-stats">
@@ -1010,38 +1053,48 @@ function resetScenario(scId) {
 }
 
 // ── QUIZ ──────────────────────────────────────────────────────────────────
-let quiz = { current:0, score:0, answered:false, done:false };
+let quiz = { current:0, score:0, answered:false, done:false, responses:[] };
 
 function renderQuiz() {
   const c = document.getElementById('quiz-container');
   if (quiz.done) {
     const s=quiz.score, t=questions.length;
     const msg = s>=7?"Excellent! You have a strong grasp of conflict management.":s>=5?"Good foundation — review the Skills section to strengthen weaker areas.":"Review the Skills and Scenarios sections and try again.";
+    const missed = questions.map((q,i)=>({q,i})).filter(({q,i}) => quiz.responses[i] !== q.answer);
     c.innerHTML=`<div class="card" style="text-align:center">
-      <div style="font-size:52px;margin-bottom:12px">${s>=7?"🏆":s>=5?"👍":"📚"}</div>
-      <div style="font-size:32px;font-weight:800;color:var(--navy)">${s} / ${t}</div>
-      <div style="font-size:15px;color:var(--gray500);margin-bottom:20px;line-height:1.6">${msg}</div>
-      ${userProgress.quiz_best_score!==null?`<div style="font-size:13px;color:var(--green);font-weight:600;margin-bottom:16px">🏅 Best score: ${userProgress.quiz_best_score}/${t} · Attempts: ${userProgress.quiz_attempts}</div>`:''}
-      <div class="result-grid">
-        <div class="result-cell" style="background:#DCFCE7"><div style="font-size:30px;font-weight:800;color:var(--green)">${s}</div><div style="font-size:12px;color:#065F46">Correct</div></div>
-        <div class="result-cell" style="background:#FEE2E2"><div style="font-size:30px;font-weight:800;color:var(--red)">${t-s}</div><div style="font-size:12px;color:#7F1D1D">To Review</div></div>
+      <div class="dial" style="background:conic-gradient(#4F46E5 ${(s/t)*360}deg,var(--s2) 0)">
+        <div class="dial-in"><div class="dial-score">${s}/${t}</div><div class="dial-label">correct</div></div>
       </div>
-      <button class="btn-primary" onclick="resetQuiz()" style="margin-right:10px">↺ Retake Quiz</button>
-      <button class="btn-outline" onclick="showSectionByName('skills')">Review Skills →</button>
+      <div class="result-msg">${msg}</div>
+      ${userProgress.quiz_best_score!==null?`<div class="result-best">Best score ${userProgress.quiz_best_score}/${t} · ${userProgress.quiz_attempts} attempt${userProgress.quiz_attempts===1?'':'s'}</div>`:''}
+      ${missed.length ? `
+      <div class="rev-wrap">
+        <div class="rev-h">Review missed questions</div>
+        ${missed.map(({q,i}) => `
+        <div class="rev-item">
+          <div class="rev-q">${q.q}</div>
+          <div class="rev-a rev-yours"><span>Your answer</span>${q.opts[quiz.responses[i]]}</div>
+          <div class="rev-a rev-correct"><span>Correct answer</span>${q.opts[q.answer]}</div>
+        </div>`).join('')}
+      </div>` : `<div class="perfect">Perfect score — nothing to review.</div>`}
+      <div class="q-actions">
+        <button class="btn-primary" onclick="resetQuiz()">${icon('reset')}Retake Quiz</button>
+        <button class="btn-outline" onclick="showSectionByName('skills')">Review Skills${icon('arrowRight')}</button>
+      </div>
     </div>`;
     return;
   }
   const q=questions[quiz.current];
   c.innerHTML=`<div class="card">
-    <div style="display:flex;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
-      <div style="font-size:14px;color:var(--gray500)">Question ${quiz.current+1} of ${questions.length}</div>
-      <div style="font-size:14px;color:var(--indigo);font-weight:700">Score: ${quiz.score}/${quiz.current}</div>
+    <div class="q-meta">
+      <div class="q-step">Question ${quiz.current+1} of ${questions.length}</div>
+      <div class="q-score">Score: ${quiz.score}/${quiz.current}</div>
     </div>
     <div class="q-bar"><div class="q-fill" style="width:${(quiz.current/questions.length)*100}%"></div></div>
-    <div style="font-weight:700;color:var(--navy);font-size:16px;margin-bottom:18px;line-height:1.6">${q.q}</div>
-    <div id="q-opts">${q.opts.map((o,i)=>`<button class="q-opt" id="qopt-${i}" onclick="answerQuiz(${i})"><span style="font-weight:800;min-width:22px">${String.fromCharCode(65+i)}.</span>${o}</button>`).join('')}</div>
-    <div id="q-next" style="margin-top:18px;text-align:right;display:none">
-      <button class="btn-primary" onclick="nextQuestion()">${quiz.current+1<questions.length?'Next Question →':'See Results'}</button>
+    <div class="q-text">${q.q}</div>
+    <div id="q-opts">${q.opts.map((o,i)=>`<button class="opt" id="qopt-${i}" onclick="answerQuiz(${i})"><span class="opt-key">${String.fromCharCode(65+i)}</span><span>${o}</span></button>`).join('')}</div>
+    <div id="q-next" class="q-next" style="display:none">
+      <button class="btn-primary" onclick="nextQuestion()">${quiz.current+1<questions.length?'Next Question':'See Results'}${icon('arrowRight')}</button>
     </div>
   </div>`;
 }
@@ -1049,13 +1102,14 @@ function renderQuiz() {
 function answerQuiz(idx) {
   if (quiz.answered) return;
   quiz.answered=true;
+  quiz.responses[quiz.current]=idx;
   const q=questions[quiz.current], correct=idx===q.answer;
   if (correct) quiz.score++;
   q.opts.forEach((o,i) => {
     const btn=document.getElementById(`qopt-${i}`); btn.disabled=true;
-    if (i===idx&&correct) btn.className='q-opt qcorrect';
-    else if (i===idx) btn.className='q-opt qwrong';
-    else if (i===q.answer) btn.className='q-opt qshow';
+    if (i===idx&&correct) { btn.className='opt correct'; btn.querySelector('.opt-key').textContent='✓'; }
+    else if (i===idx) { btn.className='opt wrong'; btn.querySelector('.opt-key').textContent='✗'; }
+    else if (i===q.answer) btn.className='opt show-correct';
   });
   document.getElementById('q-next').style.display='block';
 }
@@ -1073,7 +1127,7 @@ function nextQuestion() {
 }
 
 function resetQuiz() {
-  quiz={current:0,score:0,answered:false,done:false};
+  quiz={current:0,score:0,answered:false,done:false,responses:[]};
   renderQuiz();
 }
 
